@@ -1,3 +1,6 @@
+#Run cell 
+#%%
+
 __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (1626034)"
 # maintainer = who fixes buggs?
 __maintainer = __authors__
@@ -61,7 +64,7 @@ trainValues = np.zeros((X_VALUES.size, trainSamplingPoints))
 for i in range(X_VALUES.size):
     trainValues[i] = generateTrainValues(X_VALUES[i])
 
-print(trainValues)
+#print(trainValues)
 
 ## plot diagram --------------------------------------------------
 xMinValue = xMin
@@ -76,3 +79,8 @@ plt.plot(pltValues[0], trainValues[2], marker='o', markersize=2, color='blue', l
 plt.axis([xMinValue, xMaxValue, yMinValue + (yMinValue / 10), yMaxValue + (yMaxValue / 10)])
 plt.legend()
 plt.show()
+
+# %%
+
+
+# %%
