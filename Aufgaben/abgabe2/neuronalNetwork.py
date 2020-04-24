@@ -5,14 +5,62 @@ __date__ = "2020-04-23"
 __version__ = "0.0"
 __status__ = "Development"
 
+# kernel imports
 import numpy as np
-#import matplotlib
-#from matplotlib import pyplot as plt
 import scipy.special 
+
+# own data imports
+import constants
+from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationFunc, learningRate
+import ownFunctions
 
 ### TODO Implement class of the neural network
 ### The main file calls this
 
+class neuralNetwork:
+
+    # Generates 3-layer I-H-O neuronal network
+    def __init__(self, inputNodes=inputNeurons, hiddenNodes=hiddenNeurons, outputNodes=outputNeurons, biasNeuronPerNode=biasNeurons, activationFunction=activationFunc, alphaLearningRate=learningRate):
+        # Sets the neurons per layer
+        self.iNodes = inputNodes
+        self.hNodes = hiddenNodes
+        self.oNodes = outputNodes
+
+        # link weight matrices, wih and who
+        # Weights are linked from node i to node j
+        ## Structure of matrix
+        # - [w11 w21]
+        # - [w12 w22] etc
+        self.wih = np.random.normal(0.0, pow(self.hNodes, 0.5), (self.hNodes, self.iNodes))
+        self.who = np.random.normal(0.0, pow(self.oNodes, 0.5), (self.oNodes, self.hNodes))
+
+        # learning rate alpha
+        self.lr = alphaLearningRate
+
+        # activation function
+        self.activation_function = activationFunction
+
+        pass
+
+    def query(self, inputsArray):
+        inputs = np.array(inputsArray).T
+
+        hiddenInputs = np.dot(self.wih, inputs)
+        hiddenOutputs = self.activation_function(hiddenInputs)
+
+        outputLayerInputs = np.dot(self.who, hiddenOutputs)
+        finalOutput = self.activation_function(outputLayerInputs)
+
+        return finalOutput
+        pass
+
+    pass
+
+
+nn = neuralNetwork()
+data = ownFunctions.generateNValidTrainData(20)
+print(data)
+print(nn.query(data))
 
 
 

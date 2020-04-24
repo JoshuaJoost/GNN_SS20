@@ -5,6 +5,9 @@ __date__ = "2020-04-23"
 __version__ = "0.0"
 __status__ = "Development" # TODO status changes only when other files are implemented
 
+# kernel imports
+import scipy.special 
+
 ## Value specifications Task 2 ---------------------------
 # Don't change this values
 inputNeurons = 2 # (x,y) Point
