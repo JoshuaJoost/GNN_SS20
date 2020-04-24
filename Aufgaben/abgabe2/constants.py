@@ -28,7 +28,7 @@ invalidDataValue = 0.0
 validDataValue = 0.8
 
 ## Static values -----------------------------------------
-learningRate = 0.1
+learningRate = 0.8
 
 numberOfValidTrainData = 1000
 numberOfInvalidTrainData = 1000

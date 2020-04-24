@@ -54,13 +54,53 @@ class neuralNetwork:
         return finalOutput
         pass
 
+    # labels have to be on last index position
+    def trainWithLabeldData(self, labeldInputsArray):
+        inputs = np.zeros((labeldInputsArray.shape[0], labeldInputsArray.shape[1] - 1))
+        targets = np.zeros((labeldInputsArray.shape[0], 1))
+
+        for i in range(inputs.shape[0]):
+            for j in range(inputs.shape[1]):
+                inputs[i][j] = labeldInputsArray[i][j]
+                pass
+            pass
+
+        for i in range(targets.shape[0]):
+            targets[i] = labeldInputsArray[i][-1]
+            pass
+
+        inputs = inputs.T
+        targets = targets.T
+
+        hiddenInputs = np.dot(self.wih, inputs)
+        hiddenOutputs = self.activation_function(hiddenInputs)
+        resultsInputs = np.dot(self.who, hiddenOutputs)
+        resultsOutputs = self.activation_function(resultsInputs)
+
+        outputErrors = targets - resultsOutputs
+        hiddenErrors = np.dot(self.who.T, outputErrors)
+
+        # update weights
+        self.who += self.lr * np.dot((outputErrors * resultsOutputs * (1 - resultsOutputs)), np.transpose(hiddenOutputs))
+        self.wih += self.lr * np.dot((hiddenErrors * hiddenOutputs * (1 - hiddenOutputs)), np.transpose(inputs))
+
+        pass
+
+    def getWIH(self):
+        return self.wih
+        pass
     pass
+ 
 
 
 nn = neuralNetwork()
-data = ownFunctions.generateNValidTrainData(20)
-print(data)
-print(nn.query(data))
+print(nn.getWIH())
+for i in range(200):
+    data = ownFunctions.generateNValidTrainDataLabeld(1)
+    nn.trainWithLabeldData(data)
+    pass
+print(nn.getWIH())
+
 
 
 
