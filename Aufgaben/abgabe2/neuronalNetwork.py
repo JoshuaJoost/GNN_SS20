@@ -8,6 +8,7 @@ __status__ = "Development"
 # kernel imports
 import numpy as np
 import scipy.special 
+import types
 
 # own data imports
 import constants
@@ -18,6 +19,7 @@ import ownFunctions
 ### The main file calls this
 
 class neuralNetwork:
+    outputErrors = None
 
     # Generates 3-layer I-H-O neuronal network
     def __init__(self, inputNodes=inputNeurons, hiddenNodes=hiddenNeurons, outputNodes=outputNeurons, biasNeuronPerNode=biasNeurons, activationFunction=activationFunc, alphaLearningRate=learningRate):
@@ -58,6 +60,7 @@ class neuralNetwork:
     def trainWithLabeldData(self, labeldInputsArray):
         inputs = np.zeros((labeldInputsArray.shape[0], labeldInputsArray.shape[1] - 1))
         targets = np.zeros((labeldInputsArray.shape[0], 1))
+        #errors = np.zeros((1, targets.shape[0]))
 
         for i in range(inputs.shape[0]):
             for j in range(inputs.shape[1]):
@@ -78,6 +81,15 @@ class neuralNetwork:
         resultsOutputs = self.activation_function(resultsInputs)
 
         outputErrors = targets - resultsOutputs
+        #outputErrors = ((targets - resultsOutputs)**2).mean(axis=None)
+
+        if isinstance(self.outputErrors, type(None)):
+            self.outputErrors = abs(outputErrors)
+            pass
+        else: 
+            self.outputErrors = np.append(self.outputErrors, abs(outputErrors))
+            pass
+        
         hiddenErrors = np.dot(self.who.T, outputErrors)
 
         # update weights
@@ -89,21 +101,43 @@ class neuralNetwork:
     def getWIH(self):
         return self.wih
         pass
+
+    def getOutputErrors(self):
+        return self.outputErrors
+        pass
+
     pass
  
 
 
 nn = neuralNetwork()
-print(nn.getWIH())
-for i in range(200):
-    data = ownFunctions.generateNValidTrainDataLabeld(1)
+#print(nn.getWIH())
+for i in range(1000):
+    #data = ownFunctions.generateNValidTrainDataLabeld(1)
+    if i % 2 == 0:
+        data = ownFunctions.generateNValidTrainDataLabeld(1)
+        pass
+    else:
+        data = ownFunctions.generateNInvalidTrainDataLabeld(1)
+        pass
     nn.trainWithLabeldData(data)
     pass
-print(nn.getWIH())
 
+#for i in range(1000):
+    #data = ownFunctions.generateNValidTrainDataLabeld(1)
+#    nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(1))
+#    pass
+#print(nn.getWIH())
 
-
-
+#print(nn.getOutputErrors())
+print("test valid (0.8)")
+print(nn.query(ownFunctions.generateNValidTrainData(1)))
+print(nn.query(ownFunctions.generateNValidTrainData(1)))
+print(nn.query(ownFunctions.generateNValidTrainData(1)))
+print("test invalid (0.0)")
+print(nn.query(ownFunctions.generateNInvalidTrainData(1)))
+print(nn.query(ownFunctions.generateNInvalidTrainData(1)))
+print(nn.query(ownFunctions.generateNInvalidTrainData(1)))
 
 
 

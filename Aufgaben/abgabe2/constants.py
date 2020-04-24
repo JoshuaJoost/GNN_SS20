@@ -9,7 +9,7 @@ __status__ = "Development" # TODO status changes only when other files are imple
 import scipy.special 
 
 ## Value specifications Task 2 ---------------------------
-# Don't change this values
+# Don't change this values permanently
 inputNeurons = 2 # (x,y) Point
 biasNeurons = 1 # 1 per Neuron
 hiddenNeurons = 4 # 1 Hidden Layer
@@ -28,7 +28,7 @@ invalidDataValue = 0.0
 validDataValue = 0.8
 
 ## Static values -----------------------------------------
-learningRate = 0.8
+learningRate = 0.1
 
 numberOfValidTrainData = 1000
 numberOfInvalidTrainData = 1000
