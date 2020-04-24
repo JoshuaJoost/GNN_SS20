@@ -11,7 +11,7 @@ import random
 
 # own data imports
 import constants
-from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invalidTrainDataMinPoint, invalidTrainDataExklusivPointDistance
+from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invalidTrainDataMinPoint, invalidTrainDataExklusivPointDistance, validDataValue, invalidDataValue
 
 
 # Generates two random numbers from interval with gap
@@ -95,7 +95,28 @@ def generateNInvalidTrainData(numberOfInvalidTrainData=1):
     return toReturn_InvalidTrainData
     pass
 
+# labelvalue is on position -1
+def generateNInvalidTrainDataLabeld(numberOfInvalidTrainData=1):
+    return labelData(generateNInvalidTrainData(numberOfInvalidTrainData), invalidDataValue)
+    pass
 
+def generateNValidTrainDataLabeld(numberOfValidTrainData=1):
+    return labelData(generateNValidTrainData(numberOfValidTrainData), validDataValue)
+    pass
+
+# labelvalue is on position -1
+def labelData(dataToLabel, labelValue):
+    dataLabeld = np.zeros((dataToLabel.shape[0], dataToLabel.shape[1] + 1))
+
+    for i in range(dataLabeld.shape[0]):
+        for j in range(dataLabeld.shape[1] - 1):
+            dataLabeld[i][j] = dataToLabel[i][j]
+            pass
+        dataLabeld[i][-1] = labelValue
+        pass
+
+    return dataLabeld
+    pass
 
 
 

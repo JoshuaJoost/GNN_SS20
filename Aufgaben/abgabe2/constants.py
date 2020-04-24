@@ -21,6 +21,9 @@ yMax = 1
 yMin = -1
 yRange = abs(yMax) + abs(yMin)
 
+invalidDataValue = 0.0
+validDataValue = 0.8
+
 ## Static values -----------------------------------------
 learningRate = 0.1
 

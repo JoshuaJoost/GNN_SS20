@@ -12,14 +12,14 @@ from matplotlib import pyplot as plt
 
 # own data imports
 import ownFunctions
-from ownFunctions import generateNValidTrainData, generateNInvalidTrainData
+from ownFunctions import generateNValidTrainDataLabeld, generateNInvalidTrainDataLabeld
 import constants
 from constants import numberOfValidTrainData, numberOfInvalidTrainData
 
 
 ## Generate Traindata -------------------------------------
-validTrainData = generateNValidTrainData(numberOfValidTrainData)
-invalidTrainData = generateNInvalidTrainData(numberOfInvalidTrainData)
+validTrainData = generateNValidTrainDataLabeld(numberOfValidTrainData)
+invalidTrainData = generateNInvalidTrainDataLabeld(numberOfInvalidTrainData)
 
 ### TODO Create, train and validate the neural network and output statistics (view.py)
 
