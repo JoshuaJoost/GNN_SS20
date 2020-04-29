@@ -118,7 +118,7 @@ class neuralNetwork:
         pass
 
     def getWHO_Labeld(self):
-        return self.getLayerWeightsLabeld(self.who, "HiddenLayer", HIDDEN_LAYER)
+        return self.getLayerWeightsLabeld(self.who, "HiddenNeuron", HIDDEN_LAYER)
         pass
 
     def getAllWeights_Labeld(self):
@@ -129,8 +129,8 @@ class neuralNetwork:
         return nnWeightsLabeld
         pass
 
-    def getLayerWeightsLabeld(self, weights, actualNeuronLayerName, layerName):
-        labeldWidthsString = layerName
+    def getLayerWeightsLabeld(self, weights, actualNeuronLayerName, postLayerName):
+        labeldWidthsString = postLayerName
         
         for actualLayerNeuron in range(weights.shape[1]):
             labeldWidthsString += "\n" + actualNeuronLayerName + str(actualLayerNeuron + 1)
