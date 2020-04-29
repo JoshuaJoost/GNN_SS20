@@ -129,11 +129,11 @@ class neuralNetwork:
         return nnWeightsLabeld
         pass
 
-    def getLayerWeightsLabeld(self, weights, actualNeuronLayerName, postLayerName):
+    def getLayerWeightsLabeld(self, weights, neuronNameOfActualLayer, postLayerName):
         labeldWidthsString = postLayerName
         
         for actualLayerNeuron in range(weights.shape[1]):
-            labeldWidthsString += "\n" + actualNeuronLayerName + str(actualLayerNeuron + 1)
+            labeldWidthsString += "\n" + neuronNameOfActualLayer + str(actualLayerNeuron + 1)
             for postLayerNeuron in range(weights.shape[0]):
                 labeldWidthsString += "\nw" + str(postLayerNeuron + 1) + str(actualLayerNeuron + 1) + ": " + str(weights[postLayerNeuron][actualLayerNeuron])
                 pass
