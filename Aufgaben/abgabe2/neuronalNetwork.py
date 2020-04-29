@@ -13,6 +13,7 @@ import types
 # own data imports
 import constants
 from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationFunc, learningRate
+from constants import INPUT_LAYER, HIDDEN_LAYER
 import ownFunctions
 
 ### TODO Implement class of the neural network
@@ -46,8 +47,6 @@ class neuralNetwork:
 
     def query(self, inputsArray):
         outputs = np.zeros((inputsArray.shape[0]))
-        #print(outputs.shape)
-        #print(outputs)
         
         for i in range(inputsArray.shape[0]):
             inputs = np.array(inputsArray).T
@@ -56,7 +55,6 @@ class neuralNetwork:
             hiddenOutputs = self.activation_function(hiddenInputs)
 
             outputLayerInputs = np.dot(self.who, hiddenOutputs)
-            #print(": " + str(self.activation_function(outputLayerInputs).shape))
             outputs[i] = self.activation_function(outputLayerInputs)[0][i]
             pass
 
@@ -68,9 +66,6 @@ class neuralNetwork:
         inputs = np.zeros((labeldInputsArray.shape[0], labeldInputsArray.shape[1] - 1))
         targets = np.zeros((labeldInputsArray.shape[0], 1))
         #errors = np.zeros((1, targets.shape[0]))
-
-        #print(str(inputs) + " shape: " + str(inputs.shape))
-        #print(str(targets) + " shape: " + str(targets.shape))
 
         for i in range(inputs.shape[0]):
             for j in range(inputs.shape[1]):
@@ -84,9 +79,6 @@ class neuralNetwork:
 
         inputs = inputs.T
         targets = targets.T
-
-        #print(inputs)
-        #print(targets)
 
         for i in range(labeldInputsArray.shape[0] - 1):
             hiddenInputs = np.dot(self.wih, inputs[0][i])
@@ -117,6 +109,40 @@ class neuralNetwork:
         return self.wih
         pass
 
+    def getWIH_Labeld(self):
+        return self.getLayerWeightsLabeld(self.wih, "InputNeuron", INPUT_LAYER)
+        pass
+
+    def getWHO(self):
+        return self.who
+        pass
+
+    def getWHO_Labeld(self):
+        return self.getLayerWeightsLabeld(self.who, "HiddenLayer", HIDDEN_LAYER)
+        pass
+
+    def getAllWeights_Labeld(self):
+        nnWeightsLabeld = str(self.getWIH_Labeld())
+        nnWeightsLabeld += "\n"
+        nnWeightsLabeld += str(self.getWHO_Labeld())
+
+        return nnWeightsLabeld
+        pass
+
+    def getLayerWeightsLabeld(self, weights, actualNeuronLayerName, layerName):
+        labeldWidthsString = layerName
+        
+        for actualLayerNeuron in range(weights.shape[1]):
+            labeldWidthsString += "\n" + actualNeuronLayerName + str(actualLayerNeuron + 1)
+            for postLayerNeuron in range(weights.shape[0]):
+                labeldWidthsString += "\nw" + str(postLayerNeuron + 1) + str(actualLayerNeuron + 1) + ": " + str(weights[postLayerNeuron][actualLayerNeuron])
+                pass
+            labeldWidthsString += "\n"
+            pass
+
+        return labeldWidthsString
+        pass
+
     def getOutputErrors(self):
         return self.outputErrors
         pass
@@ -124,36 +150,14 @@ class neuralNetwork:
     pass
  
 nn = neuralNetwork()
+print(nn.getAllWeights_Labeld())
+#nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(2000))
+#print(nn.query(ownFunctions.generateNInvalidTrainData(5)))
 #print(nn.getWIH())
-#for i in range(1000):
-    #data = ownFunctions.generateNValidTrainDataLabeld(1)
-#    if i % 2 == 0:
-#        data = ownFunctions.generateNValidTrainDataLabeld(1)
-#        pass
-#    else:
-#        data = ownFunctions.generateNInvalidTrainDataLabeld(1)
-#        pass
-#    nn.trainWithLabeldData(data)
-#    pass
+#nn.trainWithLabeldData(ownFunctions.generateNValidTrainDataLabeld(2000))
+#print(nn.query(ownFunctions.generateNValidTrainData(5)))
+#print(nn.getWIH())
 
-
-#print("test valid (0.8)")
-nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(8))
-print(nn.query(ownFunctions.generateNValidTrainData(5)))
-nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(16))
-print(nn.query(ownFunctions.generateNValidTrainData(5)))
-
-nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(32))
-print(nn.query(ownFunctions.generateNValidTrainData(5)))
-
-nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(64))
-print(nn.query(ownFunctions.generateNValidTrainData(5)))
-
-nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(128))
-print(nn.query(ownFunctions.generateNValidTrainData(5)))
-
-nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(1280))
-print(nn.query(ownFunctions.generateNValidTrainData(5)))
 
 
 
