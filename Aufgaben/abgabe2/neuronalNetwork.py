@@ -46,8 +46,8 @@ class neuralNetwork:
 
     def query(self, inputsArray):
         outputs = np.zeros((inputsArray.shape[0]))
-        print(outputs.shape)
-        print(outputs)
+        #print(outputs.shape)
+        #print(outputs)
         
         for i in range(inputsArray.shape[0]):
             inputs = np.array(inputsArray).T
@@ -56,7 +56,7 @@ class neuralNetwork:
             hiddenOutputs = self.activation_function(hiddenInputs)
 
             outputLayerInputs = np.dot(self.who, hiddenOutputs)
-            print(": " + str(self.activation_function(outputLayerInputs).shape))
+            #print(": " + str(self.activation_function(outputLayerInputs).shape))
             outputs[i] = self.activation_function(outputLayerInputs)[0][i]
             pass
 
@@ -68,6 +68,9 @@ class neuralNetwork:
         inputs = np.zeros((labeldInputsArray.shape[0], labeldInputsArray.shape[1] - 1))
         targets = np.zeros((labeldInputsArray.shape[0], 1))
         #errors = np.zeros((1, targets.shape[0]))
+
+        #print(str(inputs) + " shape: " + str(inputs.shape))
+        #print(str(targets) + " shape: " + str(targets.shape))
 
         for i in range(inputs.shape[0]):
             for j in range(inputs.shape[1]):
@@ -82,26 +85,31 @@ class neuralNetwork:
         inputs = inputs.T
         targets = targets.T
 
-        hiddenInputs = np.dot(self.wih, inputs)
-        hiddenOutputs = self.activation_function(hiddenInputs)
-        resultsInputs = np.dot(self.who, hiddenOutputs)
-        resultsOutputs = self.activation_function(resultsInputs)
+        #print(inputs)
+        #print(targets)
 
-        outputErrors = targets - resultsOutputs
-        #outputErrors = ((targets - resultsOutputs)**2).mean(axis=None)
+        for i in range(labeldInputsArray.shape[0] - 1):
+            hiddenInputs = np.dot(self.wih, inputs[0][i])
+            hiddenOutputs = self.activation_function(hiddenInputs)
+            resultsInputs = np.dot(self.who, hiddenOutputs)
+            resultsOutputs = self.activation_function(resultsInputs)
 
-        if isinstance(self.outputErrors, type(None)):
-            self.outputErrors = abs(outputErrors)
+            outputErrors = targets[0][i] - resultsOutputs
+            #outputErrors = ((targets - resultsOutputs)**2).mean(axis=None)
+
+            if isinstance(self.outputErrors, type(None)):
+                self.outputErrors = abs(outputErrors)
+                pass
+            else: 
+                self.outputErrors = np.append(self.outputErrors, abs(outputErrors))
+                pass
+            
+            hiddenErrors = np.dot(self.who.T, outputErrors)
+
+            # update weights
+            self.who += self.lr * np.dot((outputErrors * resultsOutputs * (1 - resultsOutputs)), np.transpose(hiddenOutputs))
+            self.wih += self.lr * np.dot((hiddenErrors * hiddenOutputs * (1 - hiddenOutputs)), np.transpose(inputs[0][i]))
             pass
-        else: 
-            self.outputErrors = np.append(self.outputErrors, abs(outputErrors))
-            pass
-        
-        hiddenErrors = np.dot(self.who.T, outputErrors)
-
-        # update weights
-        self.who += self.lr * np.dot((outputErrors * resultsOutputs * (1 - resultsOutputs)), np.transpose(hiddenOutputs))
-        self.wih += self.lr * np.dot((hiddenErrors * hiddenOutputs * (1 - hiddenOutputs)), np.transpose(inputs))
 
         pass
 
@@ -115,24 +123,37 @@ class neuralNetwork:
 
     pass
  
-
-
 nn = neuralNetwork()
 #print(nn.getWIH())
-for i in range(1000):
+#for i in range(1000):
     #data = ownFunctions.generateNValidTrainDataLabeld(1)
-    if i % 2 == 0:
-        data = ownFunctions.generateNValidTrainDataLabeld(1)
-        pass
-    else:
-        data = ownFunctions.generateNInvalidTrainDataLabeld(1)
-        pass
-    nn.trainWithLabeldData(data)
-    pass
+#    if i % 2 == 0:
+#        data = ownFunctions.generateNValidTrainDataLabeld(1)
+#        pass
+#    else:
+#        data = ownFunctions.generateNInvalidTrainDataLabeld(1)
+#        pass
+#    nn.trainWithLabeldData(data)
+#    pass
 
 
-print("test valid (0.8)")
-print(nn.trainWithLabeldData(ownFunctions.generateNValidTrainData(1000)))
+#print("test valid (0.8)")
+nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(8))
+print(nn.query(ownFunctions.generateNValidTrainData(5)))
+nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(16))
+print(nn.query(ownFunctions.generateNValidTrainData(5)))
+
+nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(32))
+print(nn.query(ownFunctions.generateNValidTrainData(5)))
+
+nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(64))
+print(nn.query(ownFunctions.generateNValidTrainData(5)))
+
+nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(128))
+print(nn.query(ownFunctions.generateNValidTrainData(5)))
+
+nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(1280))
+print(nn.query(ownFunctions.generateNValidTrainData(5)))
 
 
 
