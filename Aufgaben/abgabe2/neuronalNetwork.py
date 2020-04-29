@@ -45,15 +45,22 @@ class neuralNetwork:
         pass
 
     def query(self, inputsArray):
-        inputs = np.array(inputsArray).T
+        outputs = np.zeros((inputsArray.shape[0]))
+        print(outputs.shape)
+        print(outputs)
+        
+        for i in range(inputsArray.shape[0]):
+            inputs = np.array(inputsArray).T
 
-        hiddenInputs = np.dot(self.wih, inputs)
-        hiddenOutputs = self.activation_function(hiddenInputs)
+            hiddenInputs = np.dot(self.wih, inputs)
+            hiddenOutputs = self.activation_function(hiddenInputs)
 
-        outputLayerInputs = np.dot(self.who, hiddenOutputs)
-        finalOutput = self.activation_function(outputLayerInputs)
+            outputLayerInputs = np.dot(self.who, hiddenOutputs)
+            print(": " + str(self.activation_function(outputLayerInputs).shape))
+            outputs[i] = self.activation_function(outputLayerInputs)[0][i]
+            pass
 
-        return finalOutput
+        return outputs
         pass
 
     # labels have to be on last index position
@@ -123,21 +130,9 @@ for i in range(1000):
     nn.trainWithLabeldData(data)
     pass
 
-#for i in range(1000):
-    #data = ownFunctions.generateNValidTrainDataLabeld(1)
-#    nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(1))
-#    pass
-#print(nn.getWIH())
 
-#print(nn.getOutputErrors())
 print("test valid (0.8)")
-print(nn.query(ownFunctions.generateNValidTrainData(1)))
-print(nn.query(ownFunctions.generateNValidTrainData(1)))
-print(nn.query(ownFunctions.generateNValidTrainData(1)))
-print("test invalid (0.0)")
-print(nn.query(ownFunctions.generateNInvalidTrainData(1)))
-print(nn.query(ownFunctions.generateNInvalidTrainData(1)))
-print(nn.query(ownFunctions.generateNInvalidTrainData(1)))
+print(nn.trainWithLabeldData(ownFunctions.generateNValidTrainData(1000)))
 
 
 
