@@ -84,3 +84,5 @@ plt.show()
 
 
 # %%
+
+#  Attraktor läuft auf einen Fixpunkt zu (in Richtung des Wertes des Sattelpunkts y = 0)
