@@ -138,23 +138,35 @@ class neuronalNetworkLayer():
 
 inputLayerInputs = np.array([4,2])
 inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
-hiddenLayer = neuronalNetworkLayer(1, 4, "HiddenLayer")
-#outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
-#print(inputLayer.__str__())
-#print(hiddenLayer.__str__())
-#print(outputLayer.__str__())
+h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
+h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
+outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
 
-#inputLayerInputs = np.array([7,90])
-#inputLayer.setInputLayerInputs(inputLayerInputs)
-#print(inputLayer.__str__())
-
-inputLayer.connectTo(hiddenLayer)
+##-- connections
+# connect input and h1
+inputLayer.connectTo(h1)
 inputLayer.setRandomWeights()
-print(hiddenLayer.getLayerNeuronsOutputValues())
-inputLayer.setInputsNextLayer()
-print(hiddenLayer.getLayerNeuronsOutputValues())
-print(hiddenLayer.getLayerNeuronsOutputValues().shape)
 
+# connect h1 and h2
+h1.connectTo(h2)
+h1.setRandomWeights()
+
+# connect h2 and output
+h2.connectTo(outputLayer)
+h2.setRandomWeights()
+
+##-- manual forwarding
+# forward input -> h1
+inputLayer.setInputsNextLayer()
+h1.getLayerNeuronsOutputValues()
+
+# forward h1 -> h2
+h1.setInputsNextLayer()
+h2.getLayerNeuronsOutputValues()
+
+# forward h2 -> output
+h2.setInputsNextLayer()
+print(outputLayer.getLayerNeuronsOutputValues())
 
 
 
