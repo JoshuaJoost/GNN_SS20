@@ -15,11 +15,27 @@ import ownFunctions
 from ownFunctions import generateNValidTrainDataLabeld, generateNInvalidTrainDataLabeld
 import constants
 from constants import numberOfValidTrainData, numberOfInvalidTrainData
+from view import printCircle
+import neuronalNetwork
 
 
 ## Generate Traindata -------------------------------------
 validTrainData = generateNValidTrainDataLabeld(numberOfValidTrainData)
 invalidTrainData = generateNInvalidTrainDataLabeld(numberOfInvalidTrainData)
+
+## init neuronalnetwork
+nn = neuronalNetwork.neuralNetwork()
+
+## train neuronalnetwork
+#for i in range(5000):
+#    if i % 2 == 0:
+#        nn.trainWithLabeldData(generateNValidTrainDataLabeld(1))
+#    else:
+#        nn.trainWithLabeldData(generateNInvalidTrainDataLabeld(1))
+#    pass
+
+#tquery = lambda x,y: nn.query(np.array([x,y])) 
+#printCircle(2, tquery)
 
 ### TODO Create, train and validate the neural network and output statistics (view.py)
 

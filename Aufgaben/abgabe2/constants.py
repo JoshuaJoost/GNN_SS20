@@ -3,7 +3,7 @@ __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (
 __maintainer = __authors__
 __date__ = "2020-04-23"
 __version__ = "0.0"
-__status__ = "Development" # TODO status changes only when other files are implemented
+__status__ = "Development"
 
 # kernel imports
 import scipy.special 
@@ -11,11 +11,11 @@ import scipy.special
 ## Value specifications Task 2 ---------------------------
 # Don't change this values permanently
 inputNeurons = 2 # (x,y) Point
-biasNeurons = 1 # 1 per Neuron
+biasNeurons = 1 # 1 per layer
 hiddenNeurons = 4 # 1 Hidden Layer
 outputNeurons = 1 # x and y between ]1,-1[ output 0.8 otherwise 0.0
 
-activationFunc = lambda x: scipy.special.expit(x) # expit = sigmoidfunction
+activationSigmoid = lambda x: scipy.special.expit(x) # expit = sigmoidfunction
 
 xMax = 1
 xMin = -1

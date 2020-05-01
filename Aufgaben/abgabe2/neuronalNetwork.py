@@ -12,18 +12,18 @@ import types
 
 # own data imports
 import constants
-from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationFunc, learningRate
+from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationSigmoid, learningRate
 from constants import INPUT_LAYER, HIDDEN_LAYER
 import ownFunctions
 
 ### TODO Implement class of the neural network
 ### The main file calls this
 
-class neuralNetwork:
+class neuronalNetwork:
     outputErrors = None
 
     # Generates 3-layer I-H-O neuronal network
-    def __init__(self, inputNodes=inputNeurons, hiddenNodes=hiddenNeurons, outputNodes=outputNeurons, biasNeuronPerNode=biasNeurons, activationFunction=activationFunc, alphaLearningRate=learningRate):
+    def __init__(self, inputNodes=inputNeurons, hiddenNodes=hiddenNeurons, outputNodes=outputNeurons, biasNeuronPerNode=biasNeurons, activationFunction=activationSigmoid, alphaLearningRate=learningRate):
         # Sets the neurons per layer
         self.iNodes = inputNodes
         self.hNodes = hiddenNodes
@@ -149,14 +149,9 @@ class neuralNetwork:
 
     pass
  
-nn = neuralNetwork()
+nn = neuronalNetwork()
 print(nn.getAllWeights_Labeld())
-#nn.trainWithLabeldData(ownFunctions.generateNInvalidTrainDataLabeld(2000))
-#print(nn.query(ownFunctions.generateNInvalidTrainData(5)))
-#print(nn.getWIH())
-#nn.trainWithLabeldData(ownFunctions.generateNValidTrainDataLabeld(2000))
-#print(nn.query(ownFunctions.generateNValidTrainData(5)))
-#print(nn.getWIH())
+
 
 
 
