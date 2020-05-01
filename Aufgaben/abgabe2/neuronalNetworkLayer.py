@@ -10,19 +10,24 @@ import numpy as np
 
 # own data imports
 from neuron import neuron
+from ownFunctions import generateRandomWeights
+from constants import weightsMinValue, weightsMaxValue
 
 class neuronalNetworkLayer():
 
-    def __init__(self, numberOfBiasNeurons, numberOfNeurons, layerName, connectionToNextLayer=None, inputLayerInputs=None, isInputLayer=False):
+    def __init__(self, numberOfBiasNeurons, numberOfNeurons, layerName, inputLayerInputs=None, isInputLayer=False):
         self.numberOfBiasNeurons = numberOfBiasNeurons
         self.numberOfNeurons = numberOfNeurons
         self.layerName = layerName
-        self.connectionToNextLayer = connectionToNextLayer
         self.inputLayerInputs = inputLayerInputs
         self.isInputLayer = isInputLayer
 
         # build layer
         self.layerNeurons = self.__buildLayerNeurons()
+
+        # --- Connection to next Layer
+        self.weights = None
+        self.connectToLayer = None
 
         pass
 
@@ -30,23 +35,35 @@ class neuronalNetworkLayer():
         layer = np.empty(self.numberOfBiasNeurons + self.numberOfNeurons, dtype=object)
 
         for i in range(self.numberOfBiasNeurons):
-            layer[i] = neuron(layerName=self.layerName, layerNeuronNumber=i, isInputNeuron=self.isInputLayer, isBiasNeuron=True)
+            layer[i] = neuron(layerName=self.layerName, layerNeuronNumber=i+1, isInputNeuron=self.isInputLayer, isBiasNeuron=True)
             pass 
 
         for i in range(self.numberOfNeurons):
             if self.isInputLayer:
-                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons, isInputNeuron=self.isInputLayer, isBiasNeuron=False, input=self.inputLayerInputs[i])
+                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer, isBiasNeuron=False, input=self.inputLayerInputs[i])
                 pass
             else:
-                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons, isInputNeuron=self.isInputLayer, isBiasNeuron=False)
+                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer, isBiasNeuron=False)
                 pass
             pass
 
         return layer
         pass
 
-    # TODO
-    def __buildLayerConnectionsToNextLayer(self):
+    def connectTo(self, nextLayer):
+        self.weights = np.zeros((self.numberOfBiasNeurons + self.numberOfNeurons, nextLayer.numberOfNeurons))
+        self.connectToLayer = nextLayer
+
+        pass
+
+    def setRandomWeights(self, weightsMin=weightsMinValue, weightsMax=weightsMaxValue):
+        randomWeights = generateRandomWeights(weightsMin, weightsMax, self.weights.size)
+        
+        for row in range(self.weights.shape[0]):
+            for column in range(self.weights.shape[1]):
+                self.weights[row][column] = randomWeights[row * self.weights.shape[1] + column]
+                pass
+            pass
 
         pass
 
@@ -72,4 +89,24 @@ class neuronalNetworkLayer():
 
 inputLayerInputs = np.array([2,3])
 inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
-print(inputLayer.__str__())
+hiddenLayer = neuronalNetworkLayer(1, 4, "HiddenLayer")
+#print(inputLayer.__str__())
+#print(hiddenLayer.__str__())
+inputLayer.connectTo(hiddenLayer)
+inputLayer.setRandomWeights()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

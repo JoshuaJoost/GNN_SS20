@@ -28,8 +28,13 @@ invalidDataValue = 0.0
 validDataValue = 0.8
 
 ## Static values -----------------------------------------
+##-- Neuronal Network Values
 learningRate = 0.01
 
+weightsMinValue = -1.0
+weightsMaxValue = 1.0
+
+##-- Traindata Values
 numberOfValidTrainData = 1000
 numberOfInvalidTrainData = 1000
 

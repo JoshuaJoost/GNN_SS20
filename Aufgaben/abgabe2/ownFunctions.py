@@ -118,8 +118,51 @@ def labelData(dataToLabel, labelValue):
     return dataLabeld
     pass
 
+# Only this function is called to generate random weights
+def generateRandomWeights(startValue, endValue, numberOfWeights):
+    return generateRandomWeights_NormalDistributionsCenter(startValue, endValue, numberOfWeights)
+    pass
 
+# distribution of the random weights random
+def generateRandomWeights_standard(startValue, endValue, numberOfWeights):
+    weights = np.zeros(numberOfWeights)
 
+    for i in range(weights.shape[0]):
+        weights[i] = np.random.uniform(startValue, endValue)
+        pass
+    return weights
+    pass
+
+# Equal distribution of the random weight around the mean
+def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, numberOfWeights):
+    weights = np.zeros(numberOfWeights)
+    distributionCenter = (startValue + endValue) / 2
+    
+    firstHalf = 0
+    lastHalf = 0
+
+    if numberOfWeights % 2 == 0:
+        firstHalf = int(numberOfWeights / 2)
+        lastHalf = int(numberOfWeights / 2)
+        pass
+    else:
+        firstHalf = int(numberOfWeights / 2)
+        lastHalf = int(numberOfWeights / 2 + 1)
+        pass
+
+    for i in range(firstHalf):
+        weights[i] = np.random.uniform(distributionCenter, endValue)
+        pass
+
+    for i in range(lastHalf):
+        weights[firstHalf + i] = np.random.uniform(startValue, distributionCenter)
+        pass
+
+    np.random.shuffle(weights)
+    return weights
+    pass
+
+#print(generateRandomWeights(-1, 1, 12))
 
 
 
