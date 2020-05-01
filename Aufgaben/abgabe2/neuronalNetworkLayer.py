@@ -15,12 +15,21 @@ from constants import weightsMinValue, weightsMaxValue
 
 class neuronalNetworkLayer():
 
-    def __init__(self, numberOfBiasNeurons, numberOfNeurons, layerName, inputLayerInputs=None, isInputLayer=False):
+    def __init__(self, numberOfBiasNeurons, numberOfNeurons, layerName, inputLayerInputs=None, isInputLayer=False, isOutputLayer=False):
         self.numberOfBiasNeurons = numberOfBiasNeurons
         self.numberOfNeurons = numberOfNeurons
         self.layerName = layerName
         self.inputLayerInputs = inputLayerInputs
         self.isInputLayer = isInputLayer
+        self.isOutputLayer = isOutputLayer
+
+        # Check for faulty layer typing
+        if self.isInputLayer and self.isOutputLayer:
+            raise ValueError("Layer kann nicht gleichzeitig Input- und Outputlayer sein")
+
+        # ignore biases at output layer
+        if self.isOutputLayer and self.numberOfBiasNeurons != 0:
+            self.numberOfBiasNeurons = 0
 
         # build layer
         self.layerNeurons = self.__buildLayerNeurons()
@@ -35,15 +44,19 @@ class neuronalNetworkLayer():
         layer = np.empty(self.numberOfBiasNeurons + self.numberOfNeurons, dtype=object)
 
         for i in range(self.numberOfBiasNeurons):
-            layer[i] = neuron(layerName=self.layerName, layerNeuronNumber=i+1, isInputNeuron=self.isInputLayer, isBiasNeuron=True)
-            pass 
+                layer[i] = neuron(layerName=self.layerName, layerNeuronNumber=i+1, isBiasNeuron=True)
+                pass 
 
         for i in range(self.numberOfNeurons):
             if self.isInputLayer:
-                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer, isBiasNeuron=False, input=self.inputLayerInputs[i])
+                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer, input=self.inputLayerInputs[i])
+                pass
+            elif self.isOutputLayer:
+                # Outputlayer has no bias Neurons
+                layer[i] = neuron(layerName=self.layerName, layerNeuronNumber=i+1, isOutputNeuron=True)
                 pass
             else:
-                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer, isBiasNeuron=False)
+                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1)
                 pass
             pass
 
@@ -64,6 +77,10 @@ class neuronalNetworkLayer():
                 self.weights[row][column] = randomWeights[row * self.weights.shape[1] + column]
                 pass
             pass
+
+        pass
+
+    def calcInputsNextLayer():
 
         pass
 
@@ -90,10 +107,12 @@ class neuronalNetworkLayer():
 inputLayerInputs = np.array([2,3])
 inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
 hiddenLayer = neuronalNetworkLayer(1, 4, "HiddenLayer")
-#print(inputLayer.__str__())
-#print(hiddenLayer.__str__())
-inputLayer.connectTo(hiddenLayer)
-inputLayer.setRandomWeights()
+outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
+print(inputLayer.__str__())
+print(hiddenLayer.__str__())
+print(outputLayer.__str__())
+#inputLayer.connectTo(hiddenLayer)
+#inputLayer.setRandomWeights()
 
 
 

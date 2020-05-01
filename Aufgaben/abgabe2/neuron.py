@@ -13,10 +13,11 @@ from constants import activationSigmoid
 
 class neuron:
 
-    def __init__(self, layerName, layerNeuronNumber, input = 0, isBiasNeuron = False, isInputNeuron = False, activationFunc = activationSigmoid):
+    def __init__(self, layerName, layerNeuronNumber, input = 0, isBiasNeuron = False, isInputNeuron = False, isOutputNeuron=False, activationFunc = activationSigmoid):
         # init neuron via params
         self.isBiasNeuron = isBiasNeuron
         self.isInputNeuron = isInputNeuron
+        self.isOutputNeuron = isOutputNeuron
         self.input = input
         self.activationFunc = activationFunc
         self.layerName = layerName
@@ -36,23 +37,18 @@ class neuron:
         pass
 
     def getOutput(self):
-        if self.isInputNeuron:
-            if self.isBiasNeuron:
-                # bias neurons just returns 1
-                return 1
-                pass
-            else:
-                return self.input
-                pass
+        if self.isBiasNeuron:
+            return 1
+            pass
+        elif self.isInputNeuron:
+            return self.input
             pass
         else:
-            if self.isBiasNeuron:
-                return 1
-                pass
-            else:
-                return self.activationFunc(self.input)
-                pass
+            return self.activationFunc(self.input)
             pass
+
+        pass
+
 
     def __str__(self):
         return self.neuronName + ": " + str(self.getOutput())
@@ -64,7 +60,7 @@ class neuron:
 
 #inputLayerX = 2
 #inputLayerY = 3
-#n1 = neuron(layerName="InputLayer", layerNeuronNumber=1, isInputNeuron=True, isBiasNeuron=True)
+#n1 = neuron(layerName="InputLayer", layerNeuronNumber=1, isInputNeuron=False, isBiasNeuron=True, input=inputLayerX)
 #print(n1.__str__())
 
 
