@@ -58,6 +58,10 @@ class neuron:
         self.input = newInput
         pass
 
+    def getInput(self):
+        return self.input
+        pass
+
     pass
 
 

@@ -81,11 +81,38 @@ class neuronalNetworkLayer():
         pass
 
     def calcInputsNextLayer(self):
+        inputsNextLayer = np.dot(self.getLayerNeuronsInputValues().T, self.weights)
+        
+        return inputsNextLayer
+        pass
+
+    def setInputsNextLayer(self):
+        self.connectToLayer.setLayerInputs(self.calcInputsNextLayer())
 
         pass
 
     def getLayerNeurons(self):
         return self.layerNeurons
+        pass
+
+    def getLayerNeuronsInputValues(self):
+        layerNeuronsInputValues = np.zeros(self.layerNeurons.shape[0])
+        
+        for i in range(layerNeuronsInputValues.shape[0]):
+            layerNeuronsInputValues[i] = self.layerNeurons[i].getInput()
+            pass
+
+        return layerNeuronsInputValues
+        pass
+
+    def getLayerNeuronsOutputValues(self):
+        layerNeuronsOutputValues = np.zeros(self.layerNeurons.shape[0])
+
+        for i in range(layerNeuronsOutputValues.shape[0]):
+            layerNeuronsOutputValues[i] = self.layerNeurons[i].getOutput()
+            pass
+
+        return layerNeuronsOutputValues
         pass
 
     def __str__(self):
@@ -102,16 +129,14 @@ class neuronalNetworkLayer():
         return layerString
         pass
 
-    def setInputLayerInputs(self, newInputs):
-        if self.isInputLayer:
-            for i in range(self.numberOfNeurons):
-                self.layerNeurons[self.numberOfBiasNeurons + i].setInput(newInputs[i])
-                pass
-        pass
+    def setLayerInputs(self, newInputs):
+        for i in range(self.numberOfNeurons):
+            self.layerNeurons[self.numberOfBiasNeurons + i].setInput(newInputs[i])
+            pass
 
     pass
 
-inputLayerInputs = np.array([2,3])
+inputLayerInputs = np.array([4,2])
 inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
 hiddenLayer = neuronalNetworkLayer(1, 4, "HiddenLayer")
 #outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
@@ -125,6 +150,10 @@ hiddenLayer = neuronalNetworkLayer(1, 4, "HiddenLayer")
 
 inputLayer.connectTo(hiddenLayer)
 inputLayer.setRandomWeights()
+print(hiddenLayer.getLayerNeuronsOutputValues())
+inputLayer.setInputsNextLayer()
+print(hiddenLayer.getLayerNeuronsOutputValues())
+print(hiddenLayer.getLayerNeuronsOutputValues().shape)
 
 
 
