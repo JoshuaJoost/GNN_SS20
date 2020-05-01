@@ -54,6 +54,10 @@ class neuron:
         return self.neuronName + ": " + str(self.getOutput())
         pass
 
+    def setInput(self, newInput):
+        self.input = newInput
+        pass
+
     pass
 
 
