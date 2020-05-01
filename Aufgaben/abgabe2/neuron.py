@@ -62,10 +62,10 @@ class neuron:
 
 
 
-inputLayerX = 2
-inputLayerY = 3
-n1 = neuron(layerName="InputLayer", layerNeuronNumber=1, isInputNeuron=True, isBiasNeuron=True)
-print(n1.__str__())
+#inputLayerX = 2
+#inputLayerY = 3
+#n1 = neuron(layerName="InputLayer", layerNeuronNumber=1, isInputNeuron=True, isBiasNeuron=True)
+#print(n1.__str__())
 
 
 
