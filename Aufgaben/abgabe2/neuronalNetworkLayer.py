@@ -102,6 +102,13 @@ class neuronalNetworkLayer():
         return layerString
         pass
 
+    def setInputLayerInputs(self, newInputs):
+        if self.isInputLayer:
+            for i in range(self.numberOfNeurons):
+                self.layerNeurons[self.numberOfBiasNeurons + i] = newInputs[i]
+                pass
+        pass
+
     pass
 
 inputLayerInputs = np.array([2,3])
@@ -111,6 +118,10 @@ outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
 print(inputLayer.__str__())
 print(hiddenLayer.__str__())
 print(outputLayer.__str__())
+
+inputLayerInputs = np.array([7,90])
+inputLayer.setInputLayerInputs(inputLayerInputs)
+print(inputLayer.__str__())
 #inputLayer.connectTo(hiddenLayer)
 #inputLayer.setRandomWeights()
 
