@@ -20,11 +20,11 @@ import neuronalNetwork
 
 
 ## Generate Traindata -------------------------------------
-validTrainData = generateNValidTrainDataLabeld(numberOfValidTrainData)
-invalidTrainData = generateNInvalidTrainDataLabeld(numberOfInvalidTrainData)
+#validTrainData = generateNValidTrainDataLabeld(numberOfValidTrainData)
+#invalidTrainData = generateNInvalidTrainDataLabeld(numberOfInvalidTrainData)
 
 ## init neuronalnetwork
-nn = neuronalNetwork.neuralNetwork()
+#nn = neuronalNetwork.neuralNetwork()
 
 ## train neuronalnetwork
 #for i in range(5000):
