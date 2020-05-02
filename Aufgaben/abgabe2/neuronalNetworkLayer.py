@@ -74,7 +74,33 @@ class neuronalNetworkLayer():
 
         pass
 
-    def setRandomWeights(self, weightsMin=weightsMinValue, weightsMax=weightsMaxValue):
+    ##--- Weights
+    # Switches between the functions for setting the weights
+    def setWeights(self, useSpecificWeights=False, specificWeightsArray=None, generateRandomWeights=False, randomWeightsMinValue=weightsMinValue, randomWeightsMaxValue=weightsMaxValue):
+        if useSpecificWeights == generateRandomWeights == False:
+            raise ValueError("'useSpecificWeights' oder 'generateRandomWeights' muss auf True gesetz sein")
+            pass
+        elif useSpecificWeights == generateRandomWeights == True:
+            raise ValueError("Nur einer der Parameter 'useSpecificWeights','generateRandomWeights' darf auf True gesetzt sein")
+            pass
+        elif useSpecificWeights == True and isinstance(specificWeightsArray, type(None)):
+            raise ValueError("Das Nutzen spezifischer Gewichte erfordert das Übergeben spezifischer Gewichte")
+            pass
+
+        if useSpecificWeights:
+            #TODO
+            raise Exception("Derzeit nicht implementiert")
+            pass
+        elif generateRandomWeights:
+            self.setRandomWeights(randomWeightsMinValue, randomWeightsMaxValue)
+            pass
+        else:
+            raise Exception("Methodik zum Setzen der Gewichte fehlgeschlagen")
+            pass
+
+        pass
+
+    def setRandomWeights(self, weightsMin, weightsMax):
         randomWeights = generateRandomWeights(weightsMin, weightsMax, self.weights.size)
         
         for row in range(self.weights.shape[0]):
@@ -83,6 +109,10 @@ class neuronalNetworkLayer():
                 pass
             pass
 
+        pass
+
+    def getLayerWeights(self):
+        return self.weights
         pass
 
     def calcInputsNextLayer(self):

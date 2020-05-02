@@ -27,18 +27,49 @@ class neuronalNetwork:
     # :param4: outputLayerArray: shape(numberOfOutputNeurons) [0] = NumberOfOutputNeurons
     def __init__(self, inputLayerArray, hiddenLayerNDIMArray, outputLayerArray):
         self.neuronalNetworkStructure = np.empty(1 + hiddenLayerNDIMArray.shape[0] + 1, dtype=object)
+        #self.neuronalNetworkConnections = None
 
         # create inputlayer
         self.neuronalNetworkStructure[0] = nnl.neuronalNetworkLayer(inputLayerArray[0], inputLayerArray[1], inputLayerLabel, isInputLayer=True)
 
         # create hiddenLayer
-        #for i in range(hiddenLayerNDIMArray.shape[0]):
-        #    self.neuronalNetworkStructure[i + 1] = nnl.neuronalNetworkLayer(hiddenLayerNDIMArray[i][0], hiddenLayerNDIMArray[i][1], hiddenLayerLabel + " (" + str(i+1) + ")")
-        #    pass
+        for i in range(hiddenLayerNDIMArray.shape[0]):
+            self.neuronalNetworkStructure[i + 1] = nnl.neuronalNetworkLayer(hiddenLayerNDIMArray[i][0], hiddenLayerNDIMArray[i][1], hiddenLayerLabel + " (" + str(i+1) + ")")
+            pass
 
         # create outputLayer
-        #self.neuronalNetworkStructure[-1] = nnl.neuronalNetworkLayer(0, outputLayerArray[0], outputLayerLabel, isOutputLayer=True)
+        self.neuronalNetworkStructure[-1] = nnl.neuronalNetworkLayer(0, outputLayerArray[0], outputLayerLabel, isOutputLayer=True)
 
+        self.__connectLayers()
+        self.__setWeights()
+
+        pass
+
+    def __connectLayers(self):
+        for i in range(self.neuronalNetworkStructure.shape[0] - 1):
+            self.neuronalNetworkStructure[i].connectTo(self.neuronalNetworkStructure[i+1])
+            pass
+        
+        pass
+
+    def __setWeights(self):
+        for i in range(self.neuronalNetworkStructure.shape[0] - 1):
+            self.neuronalNetworkStructure[i].setWeights(generateRandomWeights=True)
+            pass
+
+        pass
+
+    def __str__(self):
+        outputNeuronalNetworkStructure = ""
+
+        for i in range(self.neuronalNetworkStructure.shape[0]):
+            outputNeuronalNetworkStructure += self.neuronalNetworkStructure[i].__str__() + "\n"
+            if not isinstance(self.neuronalNetworkStructure[i].getLayerWeights(), type(None)):
+                outputNeuronalNetworkStructure += str(self.neuronalNetworkStructure[i].getLayerWeights()) + "\n"
+                pass
+            pass
+        
+        return outputNeuronalNetworkStructure
         pass
 
     pass
@@ -47,28 +78,21 @@ inputLayer = np.array([1, 2])
 nHiddenLayer = np.array([[1,4],[2,3]])
 outputLayer = np.array([1])
 
-#nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
-nnl.neuronalNetworkLayer(1,2,"Input", isInputLayer=True)
+nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
+print(nn.__str__())
 
-## setup NN
-#inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
-#h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
-#h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
-#outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
+##-- manual forwarding
+# forward input -> h1
+#inputLayer.setInputsNextLayer()
+#h1.getLayerNeuronsOutputValues()
 
-##-- connections
-# connect input and h1
-#inputLayer.connectTo(h1)
-#inputLayer.setRandomWeights()
+# forward h1 -> h2
+#h1.setInputsNextLayer()
+#h2.getLayerNeuronsOutputValues()
 
-# connect h1 and h2
-#h1.connectTo(h2)
-#h1.setRandomWeights()
-
-# connect h2 and output
-#h2.connectTo(outputLayer)
-#h2.setRandomWeights()
-
+# forward h2 -> output
+#h2.setInputsNextLayer()
+#print(outputLayer.getLayerNeuronsOutputValues())
 
 
 
