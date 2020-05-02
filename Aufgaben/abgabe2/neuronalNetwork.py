@@ -13,6 +13,7 @@ import types
 # own data imports
 import constants
 from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationSigmoid, learningRate
+from constants import errorfunction
 from constants import inputLayerLabel, hiddenLayerLabel, outputLayerLabel
 import ownFunctions
 import neuronalNetworkLayer as nnl
@@ -141,9 +142,16 @@ class neuronalNetwork:
             pass
 
         for trainData in range(labeldTrainData.shape[0]):
-            #forwarding
+            # forwarding
             output = self.forwarding(labeldTrainData[trainData])
-            print(output)
+            
+            # calculate error
+            print("out: " + str(output))
+            print("target: " + str(labeldTrainData[trainData][-1]))
+            print("target - out: " + str(labeldTrainData[trainData][-1] - output))
+            error = errorfunction(labeldTrainData[trainData][-1], output)
+            print(error)
+
             pass
         pass
 
@@ -156,9 +164,9 @@ outputLayer = np.array([1])
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 print(nn.__str__())
 
-trainData2Dim = ownFunctions.generateNValidTrainDataLabeld(numberOfValidTrainData=1)
+trainData2Dim = ownFunctions.generateNValidTrainDataLabeld(numberOfValidTrainData=2)
 trainData1Dim = np.ones([2])
-print(nn.forwarding(trainData2Dim))
+print(nn.trainWithlabeldData(trainData2Dim))
 
 ##-- manual forwarding
 # forward input -> h1

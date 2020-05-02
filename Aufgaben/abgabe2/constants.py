@@ -34,6 +34,13 @@ learningRate = 0.01
 weightsMinValue = -1.0
 weightsMaxValue = 1.0
 
+##-- Errorfunctions
+meanSquaredError = lambda targetValue, outputValue: ((targetValue - outputValue)**2).mean(axis=0)
+differenzError = lambda targetValue, outputValue: targetValue - outputValue
+
+    # NeuralNetwork accesses this
+errorfunction = differenzError
+
 ##-- Traindata Values
 numberOfValidTrainData = 1000
 numberOfInvalidTrainData = 1000
