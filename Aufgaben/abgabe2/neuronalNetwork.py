@@ -74,19 +74,22 @@ class neuronalNetwork:
 
     # Query neural network
     def forwarding(self, input):
-        outputs = np.zeros((input.shape[0], self.neuronalNetworkStructure[-1].numberOfNeurons))
+        outputs = None #np.zeros((input.shape[0], self.neuronalNetworkStructure[-1].numberOfNeurons))
 
-        if len(input.shape) != 2:
-            raise ValueError("Als Eingabe wird ein 2Dim Array erwartet")
-            pass
-        elif input.shape[1] < self.neuronalNetworkStructure[0].numberOfNeurons:
-            errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
-            raise ValueError(errorMsg)
+        if len(input.shape) < 1 and len(input.shape) > 2:
+            raise ValueError("Als Eingabe wird ein 1Dim oder 2Dim Array erwartet")
             pass
 
-        for queryData in range(input.shape[0]):
-            # The first n parameters are used as input parameters. All others (label parameters) are ignored.
-            self.neuronalNetworkStructure[0].setLayerInputs(input[queryData][:self.neuronalNetworkStructure[0].numberOfNeurons])
+        # 1Dim Traindata
+        if len(input.shape) == 1:
+            outputs = np.zeros(self.neuronalNetworkStructure[-1].numberOfNeurons)
+
+            if input.shape[0] < self.neuronalNetworkStructure[0].numberOfNeurons:
+                errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
+                raise ValueError(errorMsg)
+                pass
+
+            self.neuronalNetworkStructure[0].setLayerInputs(input[:self.neuronalNetworkStructure[0].numberOfNeurons])
 
             for layer in range(self.neuronalNetworkStructure.size - 1):
                 self.neuronalNetworkStructure[layer].setInputsNextLayer()
@@ -94,11 +97,54 @@ class neuronalNetwork:
                 pass
 
             for outputneuron in range(self.neuronalNetworkStructure[-1].numberOfNeurons):
-                outputs[queryData][outputneuron] = self.neuronalNetworkStructure[-1].getLayerNeuronsOutputValues()[outputneuron]
+                outputs[outputneuron] = self.neuronalNetworkStructure[-1].getLayerNeuronsOutputValues()[outputneuron]
                 pass
+
+            pass
+
+        # 2Dim Traindata
+        elif len(input.shape) == 2:
+            outputs = np.zeros((input.shape[0], self.neuronalNetworkStructure[-1].numberOfNeurons))
+
+            if input.shape[1] < self.neuronalNetworkStructure[0].numberOfNeurons:
+                errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
+                raise ValueError(errorMsg)
+                pass
+
+            for queryData in range(input.shape[0]):
+                # The first n parameters are used as input parameters. All others (label parameters) are ignored.
+                self.neuronalNetworkStructure[0].setLayerInputs(input[queryData][:self.neuronalNetworkStructure[0].numberOfNeurons])
+
+                for layer in range(self.neuronalNetworkStructure.size - 1):
+                    self.neuronalNetworkStructure[layer].setInputsNextLayer()
+                    self.neuronalNetworkStructure[layer + 1].getLayerNeuronsOutputValues()
+                    pass
+
+                for outputneuron in range(self.neuronalNetworkStructure[-1].numberOfNeurons):
+                    outputs[queryData][outputneuron] = self.neuronalNetworkStructure[-1].getLayerNeuronsOutputValues()[outputneuron]
+                    pass
+
             pass
 
         return outputs
+        pass
+
+    # :param2: labeldTrainData: Data must have the shape (numberOfTrainingData, numberOfInputValues + 1), numberOfInputValues = numberOfInputNeurons
+    def trainWithlabeldData(self, labeldTrainData):
+
+        if len(labeldTrainData.shape) != 2:
+            raise ValueError("Als Eingabe wird ein 2Dim Array erwartet")
+            pass
+        elif labeldTrainData.shape[1] < self.neuronalNetworkStructure[0].numberOfNeurons + 1: # +1 because of the label
+            errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
+            raise ValueError(errorMsg)
+            pass
+
+        for trainData in range(labeldTrainData.shape[0]):
+            #forwarding
+            output = self.forwarding(labeldTrainData[trainData])
+            print(output)
+            pass
         pass
 
     pass
@@ -110,8 +156,9 @@ outputLayer = np.array([1])
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 print(nn.__str__())
 
-trainData = ownFunctions.generateNValidTrainDataLabeld(numberOfValidTrainData=1)
-print(nn.forwarding(trainData))
+trainData2Dim = ownFunctions.generateNValidTrainDataLabeld(numberOfValidTrainData=1)
+trainData1Dim = np.ones([2])
+print(nn.forwarding(trainData2Dim))
 
 ##-- manual forwarding
 # forward input -> h1
