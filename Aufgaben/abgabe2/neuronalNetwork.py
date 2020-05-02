@@ -72,14 +72,44 @@ class neuronalNetwork:
         return outputNeuronalNetworkStructure
         pass
 
+    # Query neural network
+    def forwarding(self, input):
+        outputs = np.zeros((input.shape[0], self.neuronalNetworkStructure[-1].numberOfNeurons))
+
+        if len(input.shape) != 2:
+            raise ValueError("Als Eingabe wird ein 2Dim Array erwartet")
+            pass
+        elif input.shape[1] != self.neuronalNetworkStructure[0].numberOfNeurons:
+            raise ValueError(f"Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden {input.shape[1]}, Anzahl der InputNeuronen: {self.neuronalNetworkConnections[0].numberOfNeurons}")
+            pass
+
+        for queryData in range(input.shape[0]):
+            self.neuronalNetworkStructure[0].setLayerInputs(input[queryData])
+
+            for layer in range(self.neuronalNetworkStructure.size - 1):
+                self.neuronalNetworkStructure[layer].setInputsNextLayer()
+                self.neuronalNetworkStructure[layer + 1].getLayerNeuronsOutputValues()
+                pass
+
+            for outputneuron in range(self.neuronalNetworkStructure[-1].numberOfNeurons):
+                outputs[queryData][outputneuron] = self.neuronalNetworkStructure[-1].getLayerNeuronsOutputValues()[outputneuron]
+                pass
+            pass
+
+        return outputs
+        pass
+
     pass
  
 inputLayer = np.array([1, 2])
 nHiddenLayer = np.array([[1,4],[2,3]])
-outputLayer = np.array([1])
+outputLayer = np.array([2])
 
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 print(nn.__str__())
+
+trainData = ownFunctions.generateNTrainData(numberOfTrainData=2)
+print(nn.forwarding(trainData))
 
 ##-- manual forwarding
 # forward input -> h1
@@ -93,8 +123,5 @@ print(nn.__str__())
 # forward h2 -> output
 #h2.setInputsNextLayer()
 #print(outputLayer.getLayerNeuronsOutputValues())
-
-
-
 
 
