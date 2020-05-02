@@ -16,32 +16,32 @@ from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invali
 
 # Generates two random numbers from interval with gap
 # returns valid values by default
-def generateRandomNumbers(minIntervallStartValue=xMin, minIntervallEndValue=0, maxIntervallStartValue=xMax, maxIntervallEndValue=-0, numberOfValues=inputNeurons):
-    randomGenerateNumbers = np.zeros(numberOfValues) 
+def generateRandomNumbers(minIntervallStartValue=xMin, minIntervallEndValue=0, maxIntervallStartValue=0, maxIntervallEndValue=xMax, randomNumbers=1):
+    generatedRandomNumbers = np.zeros(randomNumbers)
 
-    # contains <numberOfValues * 2> negativ values and <numberOfValues * 2> positive numbers
-    randomGeneratedNumbersPool = np.zeros(numberOfValues * 2)
+    numberOfRandomNumbersInMinInterval = int(randomNumbers / 2)
+    numberOfRandomNumbersInMaxInterval = int(randomNumbers / 2)
 
-    for i in range(randomGeneratedNumbersPool.size):
-        # generate negative numbers
-        if i < randomGeneratedNumbersPool.size / 2:
-            randomGeneratedNumbersPool[i] = random.uniform(minIntervallStartValue, minIntervallEndValue)
+    if randomNumbers % 2 != 0:
+        rnd = random.randint(0, 1)
+        if rnd == 0:
+            numberOfRandomNumbersInMinInterval += 1
             pass
-        # generate positive numbers
+        else:   
+            numberOfRandomNumbersInMaxInterval += 1
+            pass
+        pass
+
+    for i in range(generatedRandomNumbers.size):
+        if i < numberOfRandomNumbersInMinInterval:
+            generatedRandomNumbers[i] = random.uniform(minIntervallStartValue, minIntervallEndValue)
+            pass
         else:
-            randomGeneratedNumbersPool[i] = random.uniform(maxIntervallStartValue, maxIntervallEndValue)
+            generatedRandomNumbers[i] = random.uniform(maxIntervallStartValue, maxIntervallEndValue)
             pass
         pass
 
-    for i in range(randomGenerateNumbers.size):
-        valueChoosed = random.choice(randomGeneratedNumbersPool)
-        randomGenerateNumbers[i] = valueChoosed
-
-        # Prevent duplication of values
-        randomGeneratedNumbersPool = np.delete(randomGeneratedNumbersPool, np.where(randomGeneratedNumbersPool == valueChoosed)[0][0])
-        pass
-
-    return randomGenerateNumbers
+    return generatedRandomNumbers
     pass
 
 # Returns array with n TrainPoints(x,y)
@@ -57,6 +57,49 @@ def generateNTrainData(minIntervallStartValue=xMin, minIntervallEndValue=0, maxI
     return trainData
     pass
 
+def generate_N_ValidAndInvalid_TrainData_Labeld_Shuffled(numberOfTrainData=1):
+    trainDataShuffled = np.zeros((numberOfTrainData, 3))
+
+    numberOfValidTrainDataLabeld = 0
+    numberOfInvalidTrainDataLabeld = 0
+
+    if numberOfTrainData % 2 == 0:
+        numberOfValidTrainDataLabeld = int(numberOfTrainData / 2)
+        numberOfInvalidTrainDataLabeld = int(numberOfTrainData / 2)
+        pass
+    else:
+        numberOfValidTrainDataLabeld = int(numberOfTrainData / 2)
+        numberOfInvalidTrainDataLabeld = int(numberOfTrainData / 2)
+
+        # Randomness decides whether the valid or invalid training data has one more data set
+        rnd = random.randint(0, 1)
+        if rnd == 0:
+            numberOfValidTrainDataLabeld += 1
+            pass
+        else:
+            numberOfInvalidTrainDataLabeld += 1
+            pass
+        pass
+
+    validTrainDataLabeld = generateNValidTrainDataLabeld(numberOfValidTrainDataLabeld)
+    invalidTrainDataLabeld = generateNInvalidTrainDataLabeld(numberOfInvalidTrainDataLabeld)
+    print(numberOfInvalidTrainDataLabeld)
+
+    print("---valid:---\n" + str(validTrainDataLabeld) + "\n")
+    print("---invalid:---\n" + str(invalidTrainDataLabeld) + "\n")
+    for i in range(trainDataShuffled.shape[0]):
+        if i < validTrainDataLabeld.shape[0]:
+            trainDataShuffled[i] = validTrainDataLabeld[i]
+            pass
+        else:
+            trainDataShuffled[i] = invalidTrainDataLabeld[i - validTrainDataLabeld.shape[0]]
+            pass
+        pass
+
+    print(trainDataShuffled)
+
+    pass
+
 def generateNValidTrainData(numberOfValidTrainData=1):
     return generateNTrainData(xMin, 0, xMax, 0, numberOfValidTrainData)
     pass
@@ -64,35 +107,11 @@ def generateNValidTrainData(numberOfValidTrainData=1):
 # generates n invalid data
 # 4 intervals must be considered: ]-1,1] ; [-1,1[ ; ]-1,0] ; [0,1[
 def generateNInvalidTrainData(numberOfInvalidTrainData=1):
-    toReturn_InvalidTrainData = np.zeros((numberOfInvalidTrainData, 2))
+    invalidTrainData = np.zeros((numberOfInvalidTrainData, 2))
     intervals = np.array([[xMin - invalidTrainDataExklusivPointDistance, xMax],[xMin, xMax + invalidTrainDataExklusivPointDistance],[xMin - invalidTrainDataExklusivPointDistance, 0], [0, xMax + invalidTrainDataExklusivPointDistance]])
-    
-    numberOfInvalidTrainDataExtended = numberOfInvalidTrainData
-    while numberOfInvalidTrainDataExtended % intervals.shape[0] != 0:
-        numberOfInvalidTrainDataExtended += 1
-        pass
 
-    # generates dynamic intervals.shape[0] interval variables and generates numberOfInvalidTrainDataExtended / intervals.shape[0] points of this interval
-    # i.e.: by 4 intervals and 12 requested data it generates 4 interval variables containing 3 points of the intervall (each of them)
-    trainingDataViaInterval = {}
-    for i in range(intervals.shape[0]):
-        trainingDataViaInterval["interval%s" %i] = generateNTrainData(intervals[i][0], invalidTrainDataMinPoint, intervals[i][1], invalidTrainDataMaxPoint, int(numberOfInvalidTrainDataExtended / intervals.shape[0]))
-        pass
+    print(intervals)
 
-    # Merge the data of the individual intervals
-    appendedTrainData = np.zeros((trainingDataViaInterval["interval0"].shape[0] * intervals.shape[0],2))
-    for iVal in range(int(toReturn_InvalidTrainData.shape[0] / trainingDataViaInterval["interval0"].shape[0])):
-        for iInterval in range(int(toReturn_InvalidTrainData.shape[0] / intervals.shape[0])):
-            appendedTrainData[iVal + iInterval + (iVal * trainingDataViaInterval["interval%s" %iVal].shape[0] - iVal)] = trainingDataViaInterval["interval%s" %iVal][iInterval]
-            pass
-        pass
-
-    # Return only the number of the requested training data
-    for i in range(numberOfInvalidTrainData):
-        toReturn_InvalidTrainData[i] = appendedTrainData[i]
-        pass
-
-    return toReturn_InvalidTrainData
     pass
 
 # labelvalue is on position -1
@@ -162,7 +181,9 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     return weights
     pass
 
-#print(generateRandomWeights(-1, 1, 12))
 
+#print(generate_N_ValidAndInvalid_TrainData_Labeld_Shuffled(numberOfTrainData=5))
+#print("\n")
+#print(generateNInvalidTrainData(5))
 
-
+print(generateRandomNumbers(randomNumbers=9))

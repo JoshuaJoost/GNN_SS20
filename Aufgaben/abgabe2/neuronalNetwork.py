@@ -146,9 +146,6 @@ class neuronalNetwork:
             output = self.forwarding(labeldTrainData[trainData])
             
             # calculate error
-            print("out: " + str(output))
-            print("target: " + str(labeldTrainData[trainData][-1]))
-            print("target - out: " + str(labeldTrainData[trainData][-1] - output))
             error = errorfunction(labeldTrainData[trainData][-1], output)
             print(error)
 
