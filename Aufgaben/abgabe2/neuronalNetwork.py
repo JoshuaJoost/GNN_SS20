@@ -13,146 +13,61 @@ import types
 # own data imports
 import constants
 from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationSigmoid, learningRate
-from constants import INPUT_LAYER, HIDDEN_LAYER
+from constants import inputLayerLabel, hiddenLayerLabel, outputLayerLabel
 import ownFunctions
+import neuronalNetworkLayer as nnl
 
 ### TODO Implement class of the neural network
 ### The main file calls this
 
 class neuronalNetwork:
-    outputErrors = None
+    
+    # :param2: inputLayerArray: shape(1,numberOfInputNeurons) [0] = BiasNeurons, [1] = InputNeurons
+    # :param3: hiddenLayerNDIMArray: shape(numberOfHiddenLayers, 2) [x][0] = NumberOfBiasNeurons, [x][1] = NumberOfNeurons
+    # :param4: outputLayerArray: shape(numberOfOutputNeurons) [0] = NumberOfOutputNeurons
+    def __init__(self, inputLayerArray, hiddenLayerNDIMArray, outputLayerArray):
+        self.neuronalNetworkStructure = np.empty(1 + hiddenLayerNDIMArray.shape[0] + 1, dtype=object)
 
-    # Generates 3-layer I-H-O neuronal network
-    def __init__(self, inputNodes=inputNeurons, hiddenNodes=hiddenNeurons, outputNodes=outputNeurons, biasNeuronPerNode=biasNeurons, activationFunction=activationSigmoid, alphaLearningRate=learningRate):
-        # Sets the neurons per layer
-        self.iNodes = inputNodes
-        self.hNodes = hiddenNodes
-        self.oNodes = outputNodes
+        # create inputlayer
+        self.neuronalNetworkStructure[0] = nnl.neuronalNetworkLayer(inputLayerArray[0], inputLayerArray[1], inputLayerLabel, isInputLayer=True)
 
-        # link weight matrices, wih and who
-        # Weights are linked from node i to node j
-        ## Structure of matrix
-        # - [w11 w21]
-        # - [w12 w22] etc
-        self.wih = np.random.normal(0.0, pow(self.hNodes, 0.5), (self.hNodes, self.iNodes))
-        self.who = np.random.normal(0.0, pow(self.oNodes, 0.5), (self.oNodes, self.hNodes))
+        # create hiddenLayer
+        #for i in range(hiddenLayerNDIMArray.shape[0]):
+        #    self.neuronalNetworkStructure[i + 1] = nnl.neuronalNetworkLayer(hiddenLayerNDIMArray[i][0], hiddenLayerNDIMArray[i][1], hiddenLayerLabel + " (" + str(i+1) + ")")
+        #    pass
 
-        # learning rate alpha
-        self.lr = alphaLearningRate
+        # create outputLayer
+        #self.neuronalNetworkStructure[-1] = nnl.neuronalNetworkLayer(0, outputLayerArray[0], outputLayerLabel, isOutputLayer=True)
 
-        # activation function
-        self.activation_function = activationFunction
-
-        pass
-
-    def query(self, inputsArray):
-        outputs = np.zeros((inputsArray.shape[0]))
-        
-        for i in range(inputsArray.shape[0]):
-            inputs = np.array(inputsArray).T
-
-            hiddenInputs = np.dot(self.wih, inputs)
-            hiddenOutputs = self.activation_function(hiddenInputs)
-
-            outputLayerInputs = np.dot(self.who, hiddenOutputs)
-            outputs[i] = self.activation_function(outputLayerInputs)[0][i]
-            pass
-
-        return outputs
-        pass
-
-    # labels have to be on last index position
-    def trainWithLabeldData(self, labeldInputsArray):
-        inputs = np.zeros((labeldInputsArray.shape[0], labeldInputsArray.shape[1] - 1))
-        targets = np.zeros((labeldInputsArray.shape[0], 1))
-        #errors = np.zeros((1, targets.shape[0]))
-
-        for i in range(inputs.shape[0]):
-            for j in range(inputs.shape[1]):
-                inputs[i][j] = labeldInputsArray[i][j]
-                pass
-            pass
-
-        for i in range(targets.shape[0]):
-            targets[i] = labeldInputsArray[i][-1]
-            pass
-
-        inputs = inputs.T
-        targets = targets.T
-
-        for i in range(labeldInputsArray.shape[0] - 1):
-            hiddenInputs = np.dot(self.wih, inputs[0][i])
-            hiddenOutputs = self.activation_function(hiddenInputs)
-            resultsInputs = np.dot(self.who, hiddenOutputs)
-            resultsOutputs = self.activation_function(resultsInputs)
-
-            outputErrors = targets[0][i] - resultsOutputs
-            #outputErrors = ((targets - resultsOutputs)**2).mean(axis=None)
-
-            if isinstance(self.outputErrors, type(None)):
-                self.outputErrors = abs(outputErrors)
-                pass
-            else: 
-                self.outputErrors = np.append(self.outputErrors, abs(outputErrors))
-                pass
-            
-            hiddenErrors = np.dot(self.who.T, outputErrors)
-
-            # update weights
-            self.who += self.lr * np.dot((outputErrors * resultsOutputs * (1 - resultsOutputs)), np.transpose(hiddenOutputs))
-            self.wih += self.lr * np.dot((hiddenErrors * hiddenOutputs * (1 - hiddenOutputs)), np.transpose(inputs[0][i]))
-            pass
-
-        pass
-
-    def getWIH(self):
-        return self.wih
-        pass
-
-    def getWIH_Labeld(self):
-        return self.getLayerWeightsLabeld(self.wih, "InputNeuron", INPUT_LAYER)
-        pass
-
-    def getWHO(self):
-        return self.who
-        pass
-
-    def getWHO_Labeld(self):
-        return self.getLayerWeightsLabeld(self.who, "HiddenNeuron", HIDDEN_LAYER)
-        pass
-
-    def getAllWeights_Labeld(self):
-        nnWeightsLabeld = str(self.getWIH_Labeld())
-        nnWeightsLabeld += "\n"
-        nnWeightsLabeld += str(self.getWHO_Labeld())
-
-        return nnWeightsLabeld
-        pass
-
-    def getLayerWeightsLabeld(self, weights, neuronNameOfActualLayer, postLayerName):
-        labeldWidthsString = postLayerName
-        
-        for actualLayerNeuron in range(weights.shape[1]):
-            labeldWidthsString += "\n" + neuronNameOfActualLayer + str(actualLayerNeuron + 1)
-            for postLayerNeuron in range(weights.shape[0]):
-                labeldWidthsString += "\nw" + str(postLayerNeuron + 1) + str(actualLayerNeuron + 1) + ": " + str(weights[postLayerNeuron][actualLayerNeuron])
-                pass
-            labeldWidthsString += "\n"
-            pass
-
-        return labeldWidthsString
-        pass
-
-    def getOutputErrors(self):
-        return self.outputErrors
         pass
 
     pass
  
-nn = neuronalNetwork()
-print(nn.getAllWeights_Labeld())
+inputLayer = np.array([1, 2])
+nHiddenLayer = np.array([[1,4],[2,3]])
+outputLayer = np.array([1])
 
+#nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
+nnl.neuronalNetworkLayer(1,2,"Input", isInputLayer=True)
 
+## setup NN
+#inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
+#h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
+#h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
+#outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
+
+##-- connections
+# connect input and h1
+#inputLayer.connectTo(h1)
+#inputLayer.setRandomWeights()
+
+# connect h1 and h2
+#h1.connectTo(h2)
+#h1.setRandomWeights()
+
+# connect h2 and output
+#h2.connectTo(outputLayer)
+#h2.setRandomWeights()
 
 
 

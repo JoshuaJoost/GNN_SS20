@@ -49,7 +49,12 @@ class neuronalNetworkLayer():
 
         for i in range(self.numberOfNeurons):
             if self.isInputLayer:
-                layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer, input=self.inputLayerInputs[i])
+                if isinstance(self.inputLayerInputs, type(None)):
+                    layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer)
+                    pass
+                else:
+                    layer[i + self.numberOfBiasNeurons] = neuron(layerName=self.layerName, layerNeuronNumber=i+self.numberOfBiasNeurons+1, isInputNeuron=self.isInputLayer, input=self.inputLayerInputs[i])
+                    pass
                 pass
             elif self.isOutputLayer:
                 # Outputlayer has no bias Neurons
@@ -136,37 +141,37 @@ class neuronalNetworkLayer():
 
     pass
 
-inputLayerInputs = np.array([4,2])
-inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
-h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
-h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
-outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
+#inputLayerInputs = np.array([4,2])
+#inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
+#h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
+#h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
+#outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
 
 ##-- connections
 # connect input and h1
-inputLayer.connectTo(h1)
-inputLayer.setRandomWeights()
+#inputLayer.connectTo(h1)
+#inputLayer.setRandomWeights()
 
 # connect h1 and h2
-h1.connectTo(h2)
-h1.setRandomWeights()
+#h1.connectTo(h2)
+#h1.setRandomWeights()
 
 # connect h2 and output
-h2.connectTo(outputLayer)
-h2.setRandomWeights()
+#h2.connectTo(outputLayer)
+#h2.setRandomWeights()
 
 ##-- manual forwarding
 # forward input -> h1
-inputLayer.setInputsNextLayer()
-h1.getLayerNeuronsOutputValues()
+#inputLayer.setInputsNextLayer()
+#h1.getLayerNeuronsOutputValues()
 
 # forward h1 -> h2
-h1.setInputsNextLayer()
-h2.getLayerNeuronsOutputValues()
+#h1.setInputsNextLayer()
+#h2.getLayerNeuronsOutputValues()
 
 # forward h2 -> output
-h2.setInputsNextLayer()
-print(outputLayer.getLayerNeuronsOutputValues())
+#h2.setInputsNextLayer()
+#print(outputLayer.getLayerNeuronsOutputValues())
 
 
 

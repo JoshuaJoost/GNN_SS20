@@ -44,9 +44,9 @@ invalidTrainDataMaxPoint = xMax + rangeInvalidTrainData
 invalidTrainDataExklusivPointDistance = 0.001
 
 ## Labels ------------------------------------------------
-INPUT_LAYER = "---- Input Layer ----"
-HIDDEN_LAYER = "---- Hidden Layer ----"
-OUTPUT_LAYER = "---- Output Layer ----"
+inputLayerLabel = "---- Input Layer ----"
+hiddenLayerLabel = "---- Hidden Layer ----"
+outputLayerLabel = "---- Output Layer ----"
 
 
 
