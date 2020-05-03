@@ -116,9 +116,6 @@ def labelData(dataToLabel, labelValue):
     dataLabeld = np.zeros((dataToLabel.shape[0], dataToLabel.shape[1] + 1))
 
     for i in range(dataLabeld.shape[0]):
-        for j in range(dataLabeld.shape[1] - 1):
-            dataLabeld[i][j] = dataToLabel[i][j]
-            pass
         dataLabeld[i][-1] = labelValue
         pass
 

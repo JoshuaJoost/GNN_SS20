@@ -16,17 +16,16 @@ from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invali
 
 
 # TODO generate Train Data
-def edgeOfUnitCircle(points=1):
-    pointsEdgeUnitCircle = np.zeros((points, 2))
+def borderOfUnitCircle(points=1):
+    pointsBorderUnitCircle = np.zeros((points, 2))
     
-    #TODO testen 
     alpha = np.arange(0, 360, 360/points)
-    for i in range(pointsEdgeUnitCircle.shape[0]):
-        pointsEdgeUnitCircle[i][0] = math.sin(math.radians(alpha[i]))
-        pointsEdgeUnitCircle[i][1] = math.cos(math.radians(alpha[i]))
+    for i in range(pointsBorderUnitCircle.shape[0]):
+        pointsBorderUnitCircle[i][0] = math.sin(math.radians(alpha[i]))
+        pointsBorderUnitCircle[i][1] = math.cos(math.radians(alpha[i]))
         pass
 
-    return pointsEdgeUnitCircle
+    return pointsBorderUnitCircle
     pass
 
 def withinUnitCircle(points=1):
@@ -119,15 +118,32 @@ def outsideUnitCircle(points=1):
     pass
 
 def validData(trainData=1):
-    #achtegeben, dass nur anzahl trainData zurückgegeben wird
-    #edgeOfUnitCircle(trainData)
-    #withinUnitCircle(trainData)
+    # Unit circle is divided into 12 intervals
+    if trainData < 13:
+        return withinUnitCircle(trainData)  
+        pass
+    else:
+        pointsOnBorderAndWithinUnitCircle = np.zeros((trainData, 2))
+        # Every 13th point should be a border point
+        numberOfBorderPoints = int(trainData / 13)
+        
+        # Points within the 12 circle intervals
+        pointsWithinCircleIntervalls = withinUnitCircle(trainData - numberOfBorderPoints)
+        for i in range(pointsWithinCircleIntervalls.shape[0]):
+            pointsOnBorderAndWithinUnitCircle[i] = pointsWithinCircleIntervalls[i]
+            pass
 
-    #return validData
+        pointsOnEdge = borderOfUnitCircle(numberOfBorderPoints)
+        for i in range(pointsOnEdge.shape[0]):
+            pointsOnBorderAndWithinUnitCircle[i + pointsWithinCircleIntervalls.shape[0]] = pointsOnEdge[i]
+            pass
+
+        return pointsOnBorderAndWithinUnitCircle
+        pass
     pass
 
 def validDataLabeld(trainData=1):
-    #return labelData(validData(trainData), validDataValue)
+    return labelData(validData(trainData), validDataValue)
     pass
 
 def invalidData(trainData=1):
@@ -145,6 +161,22 @@ def trainData_shuffeld(trainData=1):
     #invalidDataLabeld
 
     #return shuffeldTrainData
+    pass
+
+# labelvalue is on position -1
+# :param2: labelValue: datatype=int
+def labelData(dataToLabel, labelValue):
+    dataLabeld = np.zeros((dataToLabel.shape[0], dataToLabel.shape[1] + 1))
+
+    for i in range(dataLabeld.shape[0]):
+        for j in range(dataLabeld.shape[1] - 1):
+            dataLabeld[i][j] = dataToLabel[i][j]
+            pass
+
+        dataLabeld[i][-1] = labelValue
+        pass
+
+    return dataLabeld
     pass
 
 # Only this function is called to generate random weights
@@ -191,5 +223,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     return weights
     pass
 
-print(withinUnitCircle(1))
+print(validDataLabeld(39))
 
