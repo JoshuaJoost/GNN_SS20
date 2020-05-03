@@ -4,6 +4,9 @@ __maintainer = __authors__
 __date__ = "2020-05-01"
 __version__ = "0.0"
 __status__ = "Development" 
+##--- TODO
+# - testen
+# - [optional]: setzen spezifischer Gewichte 
 
 # kernel imports
 import numpy as np

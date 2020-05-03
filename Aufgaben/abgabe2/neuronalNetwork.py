@@ -4,6 +4,10 @@ __maintainer = __authors__
 __date__ = "2020-04-23"
 __version__ = "0.0"
 __status__ = "Development"
+##--- TODO
+# - Backpropagation
+# - testen
+# - [optional]: importieren und exportieren des Neuronalen Netzes (um es speichern und laden zu können)
 
 # kernel imports
 import numpy as np
@@ -17,9 +21,6 @@ from constants import errorfunction
 from constants import inputLayerLabel, hiddenLayerLabel, outputLayerLabel
 import ownFunctions
 import neuronalNetworkLayer as nnl
-
-### TODO Implement class of the neural network
-### The main file calls this
 
 class neuronalNetwork:
     
@@ -148,6 +149,8 @@ class neuronalNetwork:
             # calculate error
             error = errorfunction(labeldTrainData[trainData][-1], output)
             print(error)
+
+            # TODO backpropagation
 
             pass
         pass

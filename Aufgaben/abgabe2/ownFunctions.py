@@ -3,7 +3,11 @@ __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (
 __maintainer = __authors__
 __date__ = "2020-04-23"
 __version__ = "0.5"
-__status__ = "Testing" # TODO test
+__status__ = "Testing"
+##--- TODO 
+# - [Joshua] generate invalid train data
+# - [Joshua] generate valid and invalid train data shuffled
+# - testen
 
 # kernel imports
 import numpy as np
@@ -15,7 +19,6 @@ import constants
 from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invalidTrainDataMinPoint, invalidTrainDataExklusivPointDistance, validDataValue, invalidDataValue
 
 
-# TODO generate Train Data
 def borderOfUnitCircle(points=1):
     pointsBorderUnitCircle = np.zeros((points, 2))
     
@@ -223,5 +226,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     return weights
     pass
 
-print(validDataLabeld(39))
+# print(validDataLabeld(39))
 

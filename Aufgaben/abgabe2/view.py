@@ -4,14 +4,17 @@ __maintainer = __authors__
 __date__ = "2020-04-23"
 __version__ = "0.0"
 __status__ = "Development"
+##--- TODO 
+# - Graph showing the learning progress of the neural network
+# - Let the neural network draw the unit circle
+# - testen
 
 # kernel imports
 import numpy as np
 import matplotlib
 from matplotlib import pyplot as plt
 
-### TODO implements output functions of statistics of the neural network
-### e.g. error function, circle
+
 
 #def printCircle(value_range, query):
 #    x_range = np.arange(-value_range * 2, value_range * 2, 0.05)

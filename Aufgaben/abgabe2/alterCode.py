@@ -1,3 +1,9 @@
+##--- TODO
+#- Datei dient nur als Zwischenablage
+#- Datei wird gelöscht, wenn Projekt abgabebereit
+#- nicht testen!
+
+
 # Generates two random numbers from interval with gap
 # returns valid values by default
 def generateRandomNumbers(minIntervallStartValue=xMin, minIntervallEndValue=0, maxIntervallStartValue=0, maxIntervallEndValue=xMax, randomNumbers=1):

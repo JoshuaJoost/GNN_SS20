@@ -4,6 +4,8 @@ __maintainer = __authors__
 __date__ = "2020-04-23"
 __version__ = "0.0"
 __status__ = "Development"
+##--- TODO
+#- Datei ist fertig, wenn Projekt abgabebereit
 
 # kernel imports
 import scipy.special 
