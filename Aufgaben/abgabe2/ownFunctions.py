@@ -127,6 +127,10 @@ def withinUnitCircle(points=1):
 
 # Tested with checkForInvalidData_Outside_TheAreaNearTheUnitCircle, Method OK
 def outsideUnitCircle(points=1):
+    if points == 0:
+        return np.array((0,2))
+        pass
+
     pointsOutsideUnitCircle = np.zeros((points, 2))
     intervallsDegrees = np.array([
         [0, 90 - 0.001],
@@ -198,6 +202,10 @@ def outsideUnitCircle(points=1):
 
 # Tested with checkWheterPointsLie_Outside_butCloseUnitCircleBorder, Method OK
 def points_Outside_CloseToUniCircleBorder(points=1):
+    if points == 0:
+        return np.array((0,2))
+        pass
+
     points_ret = np.zeros((points, 2))
 
     ##--- Points close to the unit circle
@@ -426,5 +434,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(trainDataLabeld_shuffeld(11))
+print(validDataLabeld(1))
 
