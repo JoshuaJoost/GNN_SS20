@@ -302,10 +302,34 @@ def invalidDataLabeld(trainData=1):
     pass
 
 def trainData_shuffeld(trainData=1):
-    #validDataLabeld
-    #invalidDataLabeld
+    trainDataShuffeld = np.zeros((trainData, 2))
+    numberOfValidData = int(trainData / 2)
+    numberOfInvalidData = int(trainData / 2)
 
-    #return shuffeldTrainData
+    if trainData == 1 or trainData % 2 == 1:
+        rnd = random.randint(0, 1)
+        if rnd == 0:
+            numberOfValidData += 1
+            pass
+        else:
+            numberOfInvalidData += 1
+            pass
+        pass
+
+    _validData = validData(numberOfValidData)
+    for i in range(numberOfValidData):
+        trainDataShuffeld[i][0] = _validData[i][0]
+        trainDataShuffeld[i][1] = _validData[i][1]
+        pass
+
+    _invalidData = invalidData(numberOfInvalidData)
+    for i in range(numberOfInvalidData):
+        trainDataShuffeld[-1 - i][0] = _invalidData[i][0]
+        trainDataShuffeld[-1 - i][1] = _invalidData[i][1]
+        pass
+
+    random.shuffle(trainDataShuffeld)
+    return trainDataShuffeld
     pass
 
 # labelvalue is on position -1
@@ -369,5 +393,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(invalidDataLabeld(100))
+print(trainData_shuffeld(11))
 
