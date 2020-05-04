@@ -2,12 +2,8 @@ __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (
 # maintainer = who fixes buggs?
 __maintainer = __authors__
 __date__ = "2020-04-23"
-__version__ = "0.5"
-__status__ = "Testing"
-##--- TODO 
-# - [Joshua] generate invalid train data
-# - [Joshua] generate valid and invalid train data shuffled
-# - testen
+__version__ = "1.0"
+__status__ = "ReadyForUse"
 
 # kernel imports
 import numpy as np
@@ -434,5 +430,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(validDataLabeld(1))
+#print(validDataLabeld(1))
 
