@@ -127,13 +127,72 @@ def withinUnitCircle(points=1):
 
 def outsideUnitCircle(points=1):
     pointsOutsideUnitCircle = np.zeros((points, 2))
-    
+    intervallsDegrees = np.array([
+        [0, 90 - 0.001],
+        [90, 180 - 0.001],
+        [180, 270 - 0.001],
+        [270, 360 - 0.001]
+    ])
 
-    
+    largestDistancesInIntervalls = np.array([
+        # [0] centre [1] 0 <= alpha <= 45 Degree; [2] 45 <= alpha <= 90 Degree
+        [45, lambda alpha: constants.xMax / math.cos(alpha), lambda alpha: constants.xMax / math.sin(alpha)],
+        # [0] centre [1] 90 <= alpha <= 135 Degree; [2] 135 <= alpha <= 180 Degree
+        [135, lambda alpha: constants.xMax / math.sin(alpha), lambda alpha: -(constants.xMax / math.cos(alpha))],
+        # [0] centre [1] 180 <= alpha <= 225 Degree; [2] 225 <= alpha <= 270
+        [225, lambda alpha: -(constants.xMax / math.cos(alpha)), lambda alpha: -(constants.xMax / math.sin(alpha))],
+        # [0] centre [1] 270 <= alpha <= 315 Degree; [2] 315 <= alpha <= 360
+        [315, lambda alpha: -(constants.xMax / math.sin(alpha)), lambda alpha: constants.xMax / math.cos(alpha)]
+    ])
 
+    intervallsChoosed = None
+    if points < intervallsDegrees.shape[0]:
+        intervallsChoosed = np.zeros([points, intervallsDegrees.shape[1]])
 
+        # choose random intervalls
+        for i in range(intervallsChoosed.shape[0]):
+            choosedIntervall = random.randint(0, intervallsDegrees.shape[0] - 1)
+            intervallsChoosed[i] = intervallsDegrees[choosedIntervall]
+            intervallsDegrees = np.delete(intervallsDegrees, choosedIntervall, 0)
+            pass
+        pass
+    else:
+        intervallsChoosed = intervallsDegrees
+        pass
 
-    pointsOutsideUnitCircle
+    rndIntervalls = points % intervallsChoosed.shape[0]
+
+    for i in range(int(points / intervallsChoosed.shape[0])):
+        for j in range(intervallsChoosed.shape[0]):
+            degree = random.uniform(intervallsChoosed[j][0], intervallsChoosed[j][1])
+            alpha = math.radians(degree)
+            radius = 0
+            if degree <= largestDistancesInIntervalls[j][0]:
+                radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][1](alpha))
+                pass
+            else:
+                radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][2](alpha))
+                pass
+            pointsOutsideUnitCircle[j + i * intervallsChoosed.shape[0]][0] = math.cos(alpha) * radius
+            pointsOutsideUnitCircle[j + i * intervallsChoosed.shape[0]][1] = math.sin(alpha) * radius
+            pass
+        pass
+
+    for i in range(rndIntervalls):
+        degree = random.uniform(intervallsChoosed[j][0], intervallsChoosed[j][1])
+        alpha = math.radians(degree)
+        radius = 0
+        if degree <= largestDistancesInIntervalls[j][0]:
+            radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][1](alpha))
+            pass
+        else:
+            radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][2](alpha))
+            pass
+        pointsOutsideUnitCircle[-1 -i][0] = math.cos(alpha) * radius
+        pointsOutsideUnitCircle[-1 -i][1] = math.sin(alpha) * radius
+        pass
+
+    return pointsOutsideUnitCircle
     pass
 
 # Tested with checkWheterPointsLie_Outside_butCloseUnitCircleBorder, Method OK
@@ -294,5 +353,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(checkWheterPointsLie_Outside_butCloseUnitCircleBorder(points_Outside_CloseToUniCircleBorder(20)))
+print(checkWhetherPointsLie_Outside_TheUnitCircle(outsideUnitCircle(1000)))
 
