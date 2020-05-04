@@ -276,10 +276,25 @@ def validDataLabeld(trainData=1):
     return labelData(validData(trainData), validDataValue)
     pass
 
+# Tested with checkWhetherPointsLie_Outside_TheUnitCircle, Method OK
 def invalidData(trainData=1):
-    #outsideUnitCircle(trainData)
+    invalidData = np.zeros((trainData, 2))
+    numberOfPointsBeyondUnitCircle = int(trainData / 2.5)
+    numberOfPointsNearUnitCircle = trainData - numberOfPointsBeyondUnitCircle
 
-    #return invalidData
+    pointsBeyondUnitCircle = outsideUnitCircle(numberOfPointsBeyondUnitCircle)
+    for i in range(numberOfPointsBeyondUnitCircle):
+        invalidData[i][0] = pointsBeyondUnitCircle[i][0]
+        invalidData[i][1] = pointsBeyondUnitCircle[i][1]
+        pass
+
+    pointsNearUnitCircle = points_Outside_CloseToUniCircleBorder(numberOfPointsNearUnitCircle)
+    for i in range(numberOfPointsNearUnitCircle):
+        invalidData[-1 - i][0] = pointsNearUnitCircle[i][0]
+        invalidData[-1 - i][1] = pointsNearUnitCircle[i][1]
+        pass
+
+    return invalidData
     pass
 
 def invalidDataLabeld(trainData=1):
@@ -354,5 +369,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(ownTests.checkForInvalidData_Outside_TheAreaNearTheUnitCircle(outsideUnitCircle(1000)))
+print(invalidData(1000))
 
