@@ -17,8 +17,9 @@ import math
 # own data imports
 import constants
 from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invalidTrainDataMinPoint, invalidTrainDataExklusivPointDistance, validDataValue, invalidDataValue
-from ownTests import checkWhetherPointsLie_Outside_TheUnitCircle, checkWhetherPointsLie_Inside_TheUnitCircle
+from ownTests import checkWhetherPointsLie_Outside_TheUnitCircle, checkWhetherPointsLie_Inside_TheUnitCircle, pointsLiesOnUniCircleEdge
 
+# Tested with pointsLiesOnUniCircleEdge, errors are in the range e-16, Method OK
 def borderOfUnitCircle(points=1):
     pointsBorderUnitCircle = np.zeros((points, 2))
     
@@ -31,13 +32,14 @@ def borderOfUnitCircle(points=1):
     return pointsBorderUnitCircle
     pass
 
+# Tested with checkWhetherPointsLie_Inside_TheUnitCircle, No Errors, Method OK
 def withinUnitCircle(points=1):
     pointsWithinUnitCircle = np.zeros((points, 2))
 
     # Intervals to divide the circle over degrees
-    # [0, (math.pi / 2) - 0.001], \ 
-    # [math.pi / 2, math.pi - 0.001], \
-    # [math.pi, (3*math.pi / 2) - 0.001], \
+    # [0, (math.pi / 2) - 0.001],
+    # [math.pi / 2, math.pi - 0.001],
+    # [math.pi, (3*math.pi / 2) - 0.001],
     # [3*math.pi / 2, 0 - 0.001]])
     # converted into radians for uniformity to simplify the interval
     intervalsDegrees = np.array([ 
@@ -81,10 +83,12 @@ def withinUnitCircle(points=1):
         # [i][0][0,1] degrees
         # [i][1][0,1] radii
         for i in range(pointsWithinUnitCircle.shape[0]):
+            alpha = random.uniform(intervalChoosed[i][0][0], intervalChoosed[i][0][1])
+            radius = random.uniform(intervalChoosed[i][1][0], intervalChoosed[i][1][1])
             # x coordinate
-            pointsWithinUnitCircle[i][0] = math.cos(math.radians(random.uniform(intervalChoosed[i][0][0], intervalChoosed[i][0][1]))) * random.uniform(intervalChoosed[i][1][0], intervalChoosed[i][1][1])
+            pointsWithinUnitCircle[i][0] = math.cos(math.radians(alpha)) * radius
             # y coordinate
-            pointsWithinUnitCircle[i][1] = math.sin(math.radians(random.uniform(intervalChoosed[i][0][0], intervalChoosed[i][0][1]))) * random.uniform(intervalChoosed[i][1][0], intervalChoosed[i][1][1])
+            pointsWithinUnitCircle[i][1] = math.sin(math.radians(alpha)) * radius
             pass
         
     else:
@@ -93,8 +97,10 @@ def withinUnitCircle(points=1):
         # Generation of equally distributed points within the intervals
         for i in range(int(points / intervalChoosed.shape[0])):
             for j in range(intervalChoosed.shape[0]):
-                pointsWithinUnitCircle[j + i * intervalChoosed.shape[0]][0] = math.cos(math.radians(random.uniform(intervalChoosed[j][0][0], intervalChoosed[j][0][1]))) * random.uniform(intervalChoosed[j][1][0], intervalChoosed[j][1][1])
-                pointsWithinUnitCircle[j + i * intervalChoosed.shape[0]][1] = math.sin(math.radians(random.uniform(intervalChoosed[j][0][0], intervalChoosed[j][0][1]))) * random.uniform(intervalChoosed[j][1][0], intervalChoosed[j][1][1])
+                alpha = random.uniform(intervalChoosed[j][0][0], intervalChoosed[j][0][1])
+                radius = random.uniform(intervalChoosed[j][1][0], intervalChoosed[j][1][1])
+                pointsWithinUnitCircle[j + i * intervalChoosed.shape[0]][0] = math.cos(math.radians(alpha)) * radius
+                pointsWithinUnitCircle[j + i * intervalChoosed.shape[0]][1] = math.sin(math.radians(alpha)) * radius
                 pass
             pass
 
@@ -109,13 +115,13 @@ def withinUnitCircle(points=1):
 
         # points in random, but equally distributed, intervals
         for i in range(randomlyEvenlyDistributedIntervals.shape[0]):
-            pointsWithinUnitCircle[-1 - i][0] = math.cos(math.radians(random.uniform(randomlyEvenlyDistributedIntervals[i][0][0], randomlyEvenlyDistributedIntervals[i][0][1]))) * random.uniform(randomlyEvenlyDistributedIntervals[i][1][0], randomlyEvenlyDistributedIntervals[i][1][1])
-            pointsWithinUnitCircle[-1 - i][1] = math.sin(math.radians(random.uniform(randomlyEvenlyDistributedIntervals[i][0][0], randomlyEvenlyDistributedIntervals[i][0][1]))) * random.uniform(randomlyEvenlyDistributedIntervals[i][1][0], randomlyEvenlyDistributedIntervals[i][1][1])
+            alpha = random.uniform(randomlyEvenlyDistributedIntervals[i][0][0], randomlyEvenlyDistributedIntervals[i][0][1])
+            radius = random.uniform(randomlyEvenlyDistributedIntervals[i][1][0], randomlyEvenlyDistributedIntervals[i][1][1])
+            pointsWithinUnitCircle[-1 - i][0] = math.cos(math.radians(alpha)) * radius
+            pointsWithinUnitCircle[-1 - i][1] = math.sin(math.radians(alpha)) * radius
             pass
         pass
 
-    
-    print(checkWhetherPointsLie_Inside_TheUnitCircle(pointsWithinUnitCircle))
     return pointsWithinUnitCircle
     pass
 
@@ -284,5 +290,6 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     return weights
     pass
 
-print(withinUnitCircle(30))
+
+print(withinUnitCircle(1000))
 
