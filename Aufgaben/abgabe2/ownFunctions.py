@@ -298,7 +298,7 @@ def invalidData(trainData=1):
     pass
 
 def invalidDataLabeld(trainData=1):
-    #return labelData(invalidData(trainData), invalidDataValue)
+    return labelData(invalidData(trainData), invalidDataValue)
     pass
 
 def trainData_shuffeld(trainData=1):
@@ -369,5 +369,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(invalidData(1000))
+print(invalidDataLabeld(100))
 
