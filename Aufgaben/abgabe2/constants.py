@@ -9,6 +9,7 @@ __status__ = "Development"
 
 # kernel imports
 import scipy.special 
+import numpy as np
 
 ## Value specifications Task 2 ---------------------------
 # Don't change this values permanently
@@ -45,7 +46,10 @@ errorfunction = differenzError
 
 ##-- Traindata Values
 numberOfValidTrainData = 1000
-numberOfInvalidTrainData = 1000
+numberOfInvalidTrainData = numberOfValidTrainData
+
+radiusIntervalCloseToUnicircleBorder = np.array([1.001, 1.2])
+
 
 # TODO noch relevant?
 rangeInvalidTrainData = 2

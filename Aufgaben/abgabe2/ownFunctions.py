@@ -17,7 +17,7 @@ import math
 # own data imports
 import constants
 from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invalidTrainDataMinPoint, invalidTrainDataExklusivPointDistance, validDataValue, invalidDataValue
-from ownTests import checkWhetherPointsLie_Outside_TheUnitCircle, checkWhetherPointsLie_Inside_TheUnitCircle, pointsLiesOnUniCircleEdge
+from ownTests import checkWhetherPointsLie_Outside_TheUnitCircle, checkWhetherPointsLie_Inside_TheUnitCircle, pointsLiesOnUniCircleEdge, checkWheterPointsLie_Outside_butCloseUnitCircleBorder
 
 # Tested with pointsLiesOnUniCircleEdge, errors are in the range e-16, Method OK
 def borderOfUnitCircle(points=1):
@@ -136,9 +136,9 @@ def outsideUnitCircle(points=1):
     pointsOutsideUnitCircle
     pass
 
-def pointsCloseToUniCircleBorder(points=1):
+# Tested with checkWheterPointsLie_Outside_butCloseUnitCircleBorder, Method OK
+def points_Outside_CloseToUniCircleBorder(points=1):
     points_ret = np.zeros((points, 2))
-    radiusCloseToUnitCircle = np.array([1.1, 1.2])
 
     ##--- Points close to the unit circle
     # 4 Intervalls around the unit circle
@@ -169,21 +169,24 @@ def pointsCloseToUniCircleBorder(points=1):
 
     for i in range(int(points / intervallsNearUnitCircleChoosed.shape[0])):
         for j in range(intervallsNearUnitCircleChoosed.shape[0]):
-            points_ret[j + i * intervallsNearUnitCircleChoosed.shape[0]][0] = math.cos(math.radians(random.uniform(intervallsNearUnitCircleChoosed[j][0], intervallsNearUnitCircleChoosed[j][1]))) * random.uniform(radiusCloseToUnitCircle[0], radiusCloseToUnitCircle[1])
-            points_ret[j + i * intervallsNearUnitCircleChoosed.shape[0]][1] = math.sin(math.radians(random.uniform(intervallsNearUnitCircleChoosed[j][0], intervallsNearUnitCircleChoosed[j][1]))) * random.uniform(radiusCloseToUnitCircle[0], radiusCloseToUnitCircle[1])
+            alpha = random.uniform(intervallsNearUnitCircleChoosed[j][0], intervallsNearUnitCircleChoosed[j][1])
+            radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[0], constants.radiusIntervalCloseToUnicircleBorder[1])
+            points_ret[j + i * intervallsNearUnitCircleChoosed.shape[0]][0] = math.cos(math.radians(alpha)) * radius
+            points_ret[j + i * intervallsNearUnitCircleChoosed.shape[0]][1] = math.sin(math.radians(alpha)) * radius
             pass
         pass
 
     for i in range(rndIntervalls):
-        points_ret[-1 -i][0] = math.cos(math.radians(random.uniform(intervallsNearUnitCircleChoosed[i][0], intervallsNearUnitCircleChoosed[i][1]))) * random.uniform(radiusCloseToUnitCircle[0], radiusCloseToUnitCircle[1])
-        points_ret[-1 -i][1] = math.sin(math.radians(random.uniform(intervallsNearUnitCircleChoosed[i][0], intervallsNearUnitCircleChoosed[i][1]))) * random.uniform(radiusCloseToUnitCircle[0], radiusCloseToUnitCircle[1])
+        alpha = random.uniform(intervallsNearUnitCircleChoosed[i][0], intervallsNearUnitCircleChoosed[i][1])
+        radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[0], constants.radiusIntervalCloseToUnicircleBorder[1])
+        points_ret[-1 -i][0] = math.cos(math.radians(alpha)) * radius
+        points_ret[-1 -i][1] = math.sin(math.radians(alpha)) * radius
         pass
 
-    print(checkWhetherPointsLie_Outside_TheUnitCircle(points_ret))
-
-    #return points_ret
+    return points_ret
     pass
 
+# Tested with checkWhetherPointsLie_Inside_TheUnitCircle, Error at the border of the values of the unit circle in the range of 1**-16, Method OK
 def validData(trainData=1):
     # Unit circle is divided into 12 intervals
     if trainData < 13:
@@ -291,5 +294,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(withinUnitCircle(1000))
+print(checkWheterPointsLie_Outside_butCloseUnitCircleBorder(points_Outside_CloseToUniCircleBorder(20)))
 

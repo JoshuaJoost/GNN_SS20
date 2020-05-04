@@ -7,7 +7,10 @@ __status__ = "Development"
 
 # kernel imports
 import numpy as np
+import math
 
+# own data imports
+import constants
 
 def isUniCirclePoint(xCoord, yCoord):
     if xCoord**2 + yCoord**2 <= 1:
@@ -22,11 +25,34 @@ def checkWhetherPointsLie_Outside_TheUnitCircle(pointsArray):
 
     for i in range(pointsArray.shape[0]):
         output += "(" + str(pointsArray[i][0]) + "," + str(pointsArray[i][1])
-        if isUniCirclePoint(pointsArray[i][0], pointsArray[i][1]):
-            output += ") NOT OK"
+
+        if pointsArray[i][0]**2 + pointsArray[i][1]**2 > 1:
+            output += ") \x1B[32m OK \x1B[0m"
             pass
         else:
-            output += ") OK"
+            output += ") \x1B[31m ERROR: " + str(1 - pointsArray[i][0]**2 + pointsArray[i][1]**2) + "\x1B[0m"
+            pass
+
+        if i + 1 < pointsArray.shape[0]:
+            output += "\n"
+            pass
+        pass
+
+    return output
+    pass
+
+def checkWheterPointsLie_Outside_butCloseUnitCircleBorder(pointsArray):
+    output = ""
+
+    for i in range(pointsArray.shape[0]):
+        output += "(" + str(pointsArray[i][0]) + "," + str(pointsArray[i][1])
+
+        radius = math.sqrt((pointsArray[i][0] - 0)**2 + (pointsArray[i][1] - 0)**2)
+        if radius >= constants.radiusIntervalCloseToUnicircleBorder[0] and radius <= constants.radiusIntervalCloseToUnicircleBorder[1]:
+            output += ") \x1B[32m OK \x1B[0m"
+            pass
+        else:
+            output += ") \x1B[31m ERROR: " + str(constants.radiusIntervalCloseToUnicircleBorder[1] - radius) + "\x1B[0m"
             pass
 
         if i + 1 < pointsArray.shape[0]:
