@@ -164,7 +164,7 @@ outputLayer = np.array([1])
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 print(nn.__str__())
 
-trainData2Dim = ownFunctions.generateNValidTrainDataLabeld(numberOfValidTrainData=2)
+trainData2Dim = ownFunctions.validDataLabeld(trainData=1)
 trainData1Dim = np.ones([2])
 print(nn.trainWithlabeldData(trainData2Dim))
 

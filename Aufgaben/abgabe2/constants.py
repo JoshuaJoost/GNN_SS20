@@ -47,6 +47,7 @@ errorfunction = differenzError
 numberOfValidTrainData = 1000
 numberOfInvalidTrainData = 1000
 
+# TODO noch relevant?
 rangeInvalidTrainData = 2
 invalidTrainDataMinPoint = xMin - rangeInvalidTrainData
 invalidTrainDataMaxPoint = xMax + rangeInvalidTrainData
