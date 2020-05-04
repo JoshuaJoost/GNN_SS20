@@ -17,7 +17,7 @@ import math
 # own data imports
 import constants
 from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invalidTrainDataMinPoint, invalidTrainDataExklusivPointDistance, validDataValue, invalidDataValue
-from ownTests import checkWhetherPointsLie_Outside_TheUnitCircle, checkWhetherPointsLie_Inside_TheUnitCircle, pointsLiesOnUniCircleEdge, checkWheterPointsLie_Outside_butCloseUnitCircleBorder
+import ownTests
 
 # Tested with pointsLiesOnUniCircleEdge, errors are in the range e-16, Method OK
 def borderOfUnitCircle(points=1):
@@ -125,6 +125,7 @@ def withinUnitCircle(points=1):
     return pointsWithinUnitCircle
     pass
 
+# Tested with checkForInvalidData_Outside_TheAreaNearTheUnitCircle, Method OK
 def outsideUnitCircle(points=1):
     pointsOutsideUnitCircle = np.zeros((points, 2))
     intervallsDegrees = np.array([
@@ -353,5 +354,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(checkWhetherPointsLie_Outside_TheUnitCircle(outsideUnitCircle(1000)))
+print(ownTests.checkForInvalidData_Outside_TheAreaNearTheUnitCircle(outsideUnitCircle(1000)))
 
