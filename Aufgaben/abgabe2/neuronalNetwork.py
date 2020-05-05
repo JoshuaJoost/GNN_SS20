@@ -5,7 +5,7 @@ __date__ = "2020-04-23"
 __version__ = "0.0"
 __status__ = "Development"
 ##--- TODO
-# - Backpropagation
+# - [Joshua] Backpropagation
 # - testen
 # - [optional]: importieren und exportieren des Neuronalen Netzes (um es speichern und laden zu können)
 

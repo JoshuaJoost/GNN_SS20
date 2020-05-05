@@ -105,3 +105,32 @@ def pointsLiesOnUniCircleEdge(pointsArray):
 
     return output
     pass
+
+def checkForInvalidData_Outside_TheAreaNearTheUnitCircle(pointsArray):
+    output = ""
+
+    for i in range(pointsArray.shape[0]):
+        output += "(" + str(pointsArray[i][0]) + "," + str(pointsArray[i][1])
+
+        radius = math.sqrt((pointsArray[i][0] - 0)**2 + (pointsArray[i][1] - 0)**2)
+        # radius <= constants.xMax / math.cos(45): Here the maximum possible distance is generally taken, which is not entirely clean. 
+        # Actually, the maximum distance should be calculated using the angle alpha, depending on the interval
+        if radius > constants.radiusIntervalCloseToUnicircleBorder[1] and radius <= constants.xMax / math.cos(45):
+            output += ") \x1B[32m OK: \x1B[0m"
+            pass
+        elif radius <= constants.radiusIntervalCloseToUnicircleBorder[1]:
+            output += ") \x1B[31m ERROR Punkt zu nahe am Einheitskreis: Strecke = " + str(radius) + "\x1B[0m"
+            pass
+        else:
+            output += ") \x1B[31m ERROR Punkt außerhalb des Graphen: Strecke = " + str(radius) + "\x1B[0m"
+            pass
+
+        if i + 1 < pointsArray.shape[0]:
+            output += "\n"
+            pass
+        pass
+
+        pass
+
+    return output
+    pass

@@ -2,12 +2,8 @@ __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (
 # maintainer = who fixes buggs?
 __maintainer = __authors__
 __date__ = "2020-04-23"
-__version__ = "0.5"
-__status__ = "Testing"
-##--- TODO 
-# - [Joshua] generate invalid train data
-# - [Joshua] generate valid and invalid train data shuffled
-# - testen
+__version__ = "1.0"
+__status__ = "ReadyForUse"
 
 # kernel imports
 import numpy as np
@@ -17,7 +13,7 @@ import math
 # own data imports
 import constants
 from constants import xMin, xMax, inputNeurons, invalidTrainDataMaxPoint, invalidTrainDataMinPoint, invalidTrainDataExklusivPointDistance, validDataValue, invalidDataValue
-from ownTests import checkWhetherPointsLie_Outside_TheUnitCircle, checkWhetherPointsLie_Inside_TheUnitCircle, pointsLiesOnUniCircleEdge, checkWheterPointsLie_Outside_butCloseUnitCircleBorder
+import ownTests
 
 # Tested with pointsLiesOnUniCircleEdge, errors are in the range e-16, Method OK
 def borderOfUnitCircle(points=1):
@@ -125,19 +121,87 @@ def withinUnitCircle(points=1):
     return pointsWithinUnitCircle
     pass
 
+# Tested with checkForInvalidData_Outside_TheAreaNearTheUnitCircle, Method OK
 def outsideUnitCircle(points=1):
+    if points == 0:
+        return np.array((0,2))
+        pass
+
     pointsOutsideUnitCircle = np.zeros((points, 2))
-    
+    intervallsDegrees = np.array([
+        [0, 90 - 0.001],
+        [90, 180 - 0.001],
+        [180, 270 - 0.001],
+        [270, 360 - 0.001]
+    ])
 
-    
+    largestDistancesInIntervalls = np.array([
+        # [0] centre [1] 0 <= alpha <= 45 Degree; [2] 45 <= alpha <= 90 Degree
+        [45, lambda alpha: constants.xMax / math.cos(alpha), lambda alpha: constants.xMax / math.sin(alpha)],
+        # [0] centre [1] 90 <= alpha <= 135 Degree; [2] 135 <= alpha <= 180 Degree
+        [135, lambda alpha: constants.xMax / math.sin(alpha), lambda alpha: -(constants.xMax / math.cos(alpha))],
+        # [0] centre [1] 180 <= alpha <= 225 Degree; [2] 225 <= alpha <= 270
+        [225, lambda alpha: -(constants.xMax / math.cos(alpha)), lambda alpha: -(constants.xMax / math.sin(alpha))],
+        # [0] centre [1] 270 <= alpha <= 315 Degree; [2] 315 <= alpha <= 360
+        [315, lambda alpha: -(constants.xMax / math.sin(alpha)), lambda alpha: constants.xMax / math.cos(alpha)]
+    ])
 
+    intervallsChoosed = None
+    if points < intervallsDegrees.shape[0]:
+        intervallsChoosed = np.zeros([points, intervallsDegrees.shape[1]])
 
+        # choose random intervalls
+        for i in range(intervallsChoosed.shape[0]):
+            choosedIntervall = random.randint(0, intervallsDegrees.shape[0] - 1)
+            intervallsChoosed[i] = intervallsDegrees[choosedIntervall]
+            intervallsDegrees = np.delete(intervallsDegrees, choosedIntervall, 0)
+            pass
+        pass
+    else:
+        intervallsChoosed = intervallsDegrees
+        pass
 
-    pointsOutsideUnitCircle
+    rndIntervalls = points % intervallsChoosed.shape[0]
+
+    for i in range(int(points / intervallsChoosed.shape[0])):
+        for j in range(intervallsChoosed.shape[0]):
+            degree = random.uniform(intervallsChoosed[j][0], intervallsChoosed[j][1])
+            alpha = math.radians(degree)
+            radius = 0
+            if degree <= largestDistancesInIntervalls[j][0]:
+                radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][1](alpha))
+                pass
+            else:
+                radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][2](alpha))
+                pass
+            pointsOutsideUnitCircle[j + i * intervallsChoosed.shape[0]][0] = math.cos(alpha) * radius
+            pointsOutsideUnitCircle[j + i * intervallsChoosed.shape[0]][1] = math.sin(alpha) * radius
+            pass
+        pass
+
+    for i in range(rndIntervalls):
+        degree = random.uniform(intervallsChoosed[j][0], intervallsChoosed[j][1])
+        alpha = math.radians(degree)
+        radius = 0
+        if degree <= largestDistancesInIntervalls[j][0]:
+            radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][1](alpha))
+            pass
+        else:
+            radius = random.uniform(constants.radiusIntervalCloseToUnicircleBorder[1], largestDistancesInIntervalls[j][2](alpha))
+            pass
+        pointsOutsideUnitCircle[-1 -i][0] = math.cos(alpha) * radius
+        pointsOutsideUnitCircle[-1 -i][1] = math.sin(alpha) * radius
+        pass
+
+    return pointsOutsideUnitCircle
     pass
 
 # Tested with checkWheterPointsLie_Outside_butCloseUnitCircleBorder, Method OK
 def points_Outside_CloseToUniCircleBorder(points=1):
+    if points == 0:
+        return np.array((0,2))
+        pass
+
     points_ret = np.zeros((points, 2))
 
     ##--- Points close to the unit circle
@@ -216,21 +280,93 @@ def validDataLabeld(trainData=1):
     return labelData(validData(trainData), validDataValue)
     pass
 
+# Tested with checkWhetherPointsLie_Outside_TheUnitCircle, Method OK
 def invalidData(trainData=1):
-    #outsideUnitCircle(trainData)
+    invalidData = np.zeros((trainData, 2))
+    numberOfPointsBeyondUnitCircle = int(trainData / 2.5)
+    numberOfPointsNearUnitCircle = trainData - numberOfPointsBeyondUnitCircle
 
-    #return invalidData
+    pointsBeyondUnitCircle = outsideUnitCircle(numberOfPointsBeyondUnitCircle)
+    for i in range(numberOfPointsBeyondUnitCircle):
+        invalidData[i][0] = pointsBeyondUnitCircle[i][0]
+        invalidData[i][1] = pointsBeyondUnitCircle[i][1]
+        pass
+
+    pointsNearUnitCircle = points_Outside_CloseToUniCircleBorder(numberOfPointsNearUnitCircle)
+    for i in range(numberOfPointsNearUnitCircle):
+        invalidData[-1 - i][0] = pointsNearUnitCircle[i][0]
+        invalidData[-1 - i][1] = pointsNearUnitCircle[i][1]
+        pass
+
+    return invalidData
     pass
 
 def invalidDataLabeld(trainData=1):
-    #return labelData(invalidData(trainData), invalidDataValue)
+    return labelData(invalidData(trainData), invalidDataValue)
     pass
 
 def trainData_shuffeld(trainData=1):
-    #validDataLabeld
-    #invalidDataLabeld
+    trainDataShuffeld = np.zeros((trainData, 2))
+    numberOfValidData = int(trainData / 2)
+    numberOfInvalidData = int(trainData / 2)
 
-    #return shuffeldTrainData
+    if trainData == 1 or trainData % 2 == 1:
+        rnd = random.randint(0, 1)
+        if rnd == 0:
+            numberOfValidData += 1
+            pass
+        else:
+            numberOfInvalidData += 1
+            pass
+        pass
+
+    _validData = validData(numberOfValidData)
+    for i in range(numberOfValidData):
+        trainDataShuffeld[i][0] = _validData[i][0]
+        trainDataShuffeld[i][1] = _validData[i][1]
+        pass
+
+    _invalidData = invalidData(numberOfInvalidData)
+    for i in range(numberOfInvalidData):
+        trainDataShuffeld[-1 - i][0] = _invalidData[i][0]
+        trainDataShuffeld[-1 - i][1] = _invalidData[i][1]
+        pass
+
+    np.random.shuffle(trainDataShuffeld)
+    return trainDataShuffeld
+    pass
+
+def trainDataLabeld_shuffeld(trainData=1):
+    trainDataLabeldShuffeld = np.zeros((trainData, 3))
+    numberOfValidDataLabeld = int(trainData / 2)
+    numberOfInvalidDataLabeld = int(trainData / 2)
+
+    if trainData == 1 or trainData % 2 == 1:
+        rnd = random.randint(0, 1)
+        if rnd == 0:
+            numberOfValidDataLabeld += 1
+            pass
+        else:
+            numberOfInvalidDataLabeld += 1
+            pass
+        pass
+
+    _validDataLabeld = validDataLabeld(numberOfValidDataLabeld)
+    for i in range(numberOfValidDataLabeld):
+        trainDataLabeldShuffeld[i][0] = _validDataLabeld[i][0]
+        trainDataLabeldShuffeld[i][1] = _validDataLabeld[i][1]
+        trainDataLabeldShuffeld[i][2] = _validDataLabeld[i][2]
+        pass
+
+    _invalidDataLabeld = invalidDataLabeld(numberOfInvalidDataLabeld)
+    for i in range(numberOfInvalidDataLabeld):
+        trainDataLabeldShuffeld[-1 - i][0] = _invalidDataLabeld[i][0]
+        trainDataLabeldShuffeld[-1 - i][1] = _invalidDataLabeld[i][1]
+        trainDataLabeldShuffeld[-1 - i][2] = _invalidDataLabeld[i][2]
+        pass
+
+    np.random.shuffle(trainDataLabeldShuffeld)
+    return trainDataLabeldShuffeld
     pass
 
 # labelvalue is on position -1
@@ -294,5 +430,5 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     pass
 
 
-print(checkWheterPointsLie_Outside_butCloseUnitCircleBorder(points_Outside_CloseToUniCircleBorder(20)))
+#print(validDataLabeld(1))
 

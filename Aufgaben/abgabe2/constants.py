@@ -20,11 +20,11 @@ outputNeurons = 1 # x and y between ]1,-1[ output 0.8 otherwise 0.0
 
 activationSigmoid = lambda x: scipy.special.expit(x) # expit = sigmoidfunction
 
-xMax = 1
-xMin = -1
+xMax = 3
+xMin = -3
 xRange = abs(xMax) + abs(xMin)
-yMax = 1
-yMin = -1
+yMax = 3
+yMin = -3
 yRange = abs(yMax) + abs(yMin)
 
 invalidDataValue = 0.0
