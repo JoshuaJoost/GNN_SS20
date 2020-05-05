@@ -14,7 +14,7 @@ import numpy as np
 # own data imports
 from neuron import neuron
 from ownFunctions import generateRandomWeights
-from constants import weightsMinValue, weightsMaxValue
+import constants
 
 class neuronalNetworkLayer():
 
@@ -79,7 +79,7 @@ class neuronalNetworkLayer():
 
     ##--- Weights
     # Switches between the functions for setting the weights
-    def setWeights(self, useSpecificWeights=False, specificWeightsArray=None, generateRandomWeights=False, randomWeightsMinValue=weightsMinValue, randomWeightsMaxValue=weightsMaxValue):
+    def setWeights(self, useSpecificWeights=False, specificWeightsArray=None, generateRandomWeights=False, randomWeightsMinValue=constants.weightsMinValue, randomWeightsMaxValue=constants.weightsMaxValue):
         if useSpecificWeights == generateRandomWeights == False:
             raise ValueError("'useSpecificWeights' oder 'generateRandomWeights' muss auf True gesetz sein")
             pass
@@ -91,8 +91,12 @@ class neuronalNetworkLayer():
             pass
 
         if useSpecificWeights:
-            #TODO
-            raise Exception("Derzeit nicht implementiert")
+            if self.weights.shape == specificWeightsArray.shape:
+                self.weights = specificWeightsArray
+                pass
+            else:
+                raise ValueError("Arraydimensionen müssen identisch sein: Layergewichte-Shape = " + str(self.weights.shape) + " Shape der übergebenen Gewichte = " + str(specificWeightsArray.shape))
+                pass
             pass
         elif generateRandomWeights:
             self.setRandomWeights(randomWeightsMinValue, randomWeightsMaxValue)
@@ -103,7 +107,7 @@ class neuronalNetworkLayer():
 
         pass
 
-    def setRandomWeights(self, weightsMin, weightsMax):
+    def setRandomWeights(self, weightsMin=constants.weightsMinValue, weightsMax=constants.weightsMaxValue):
         randomWeights = generateRandomWeights(weightsMin, weightsMax, self.weights.size)
         
         for row in range(self.weights.shape[0]):
@@ -174,40 +178,16 @@ class neuronalNetworkLayer():
 
     pass
 
-#inputLayerInputs = np.array([4,2])
-#inputLayer = neuronalNetworkLayer(1, 2, "InputLayer", isInputLayer=True, inputLayerInputs=inputLayerInputs)
-#h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
-#h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
-#outputLayer = neuronalNetworkLayer(0, 1, "OutputLayer", isOutputLayer=True)
+h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
+h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
 
-##-- connections
-# connect input and h1
-#inputLayer.connectTo(h1)
-#inputLayer.setRandomWeights()
+h1.connectTo(h2)
+h1.setRandomWeights()
 
-# connect h1 and h2
-#h1.connectTo(h2)
-#h1.setRandomWeights()
-
-# connect h2 and output
-#h2.connectTo(outputLayer)
-#h2.setRandomWeights()
-
-##-- manual forwarding
-# forward input -> h1
-#inputLayer.setInputsNextLayer()
-#h1.getLayerNeuronsOutputValues()
-
-# forward h1 -> h2
-#h1.setInputsNextLayer()
-#h2.getLayerNeuronsOutputValues()
-
-# forward h2 -> output
-#h2.setInputsNextLayer()
-#print(outputLayer.getLayerNeuronsOutputValues())
-
-
-
+newWeights = np.ones((5,4))
+print(h1.getLayerWeights())
+h1.setWeights(useSpecificWeights=True, specificWeightsArray=newWeights)
+print(h1.getLayerWeights())
 
 
 

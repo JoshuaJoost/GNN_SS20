@@ -43,7 +43,7 @@ class neuronalNetwork:
         self.neuronalNetworkStructure[-1] = nnl.neuronalNetworkLayer(0, outputLayerArray[0], outputLayerLabel, isOutputLayer=True)
 
         self.__connectLayers()
-        self.__setWeights()
+        self.__initialiseWeights()
 
         pass
 
@@ -54,7 +54,7 @@ class neuronalNetwork:
         
         pass
 
-    def __setWeights(self):
+    def __initialiseWeights(self):
         for i in range(self.neuronalNetworkStructure.shape[0] - 1):
             self.neuronalNetworkStructure[i].setWeights(generateRandomWeights=True)
             pass
@@ -138,7 +138,7 @@ class neuronalNetwork:
             raise ValueError("Als Eingabe wird ein 2Dim Array erwartet")
             pass
         elif labeldTrainData.shape[1] < self.neuronalNetworkStructure[0].numberOfNeurons + 1: # +1 because of the label
-            errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
+            errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen (+1 für das Label) entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
             raise ValueError(errorMsg)
             pass
 
@@ -147,10 +147,15 @@ class neuronalNetwork:
             output = self.forwarding(labeldTrainData[trainData])
             
             # calculate error
+            # target value - output
             error = errorfunction(labeldTrainData[trainData][-1], output)
-            print(error)
+            print("error: " + str(error))
 
             # TODO backpropagation
+            for i in range(self.neuronalNetworkStructure.shape[0] - 1):
+                print(self.neuronalNetworkStructure[-2 - i].__str__())
+                print(self.neuronalNetworkStructure[-2 - i].getLayerWeights())
+                pass
 
             pass
         pass
@@ -158,15 +163,14 @@ class neuronalNetwork:
     pass
  
 inputLayer = np.array([1, 2])
-nHiddenLayer = np.array([[1,4]])
+nHiddenLayer = np.array([[1,4],[1,4]])
 outputLayer = np.array([1])
 
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
-print(nn.__str__())
+#print(nn.__str__())
 
-trainData2Dim = ownFunctions.validDataLabeld(trainData=1)
-trainData1Dim = np.ones([2])
-print(nn.trainWithlabeldData(trainData2Dim))
+trainData = ownFunctions.trainDataLabeld_shuffeld(1)
+nn.trainWithlabeldData(trainData)
 
 ##-- manual forwarding
 # forward input -> h1
