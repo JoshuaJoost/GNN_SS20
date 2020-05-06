@@ -148,13 +148,33 @@ class neuronalNetwork:
             
             # calculate error
             # target value - output
-            error = errorfunction(labeldTrainData[trainData][-1], output)
-            print("error: " + str(error))
+            outputLayerError = np.reshape(errorfunction(labeldTrainData[trainData][-1], output),(1,1))
+            self.neuronalNetworkStructure[-1].setLayerError(outputLayerError)
+            #print(self.neuronalNetworkStructure[-1].getLayerError())
 
-            # TODO backpropagation
+            # backpropagation
             for i in range(self.neuronalNetworkStructure.shape[0] - 1):
-                print(self.neuronalNetworkStructure[-2 - i].__str__())
-                print(self.neuronalNetworkStructure[-2 - i].getLayerWeights())
+                ##--- Calculate the new weights depending on the error of the following layer
+                # Set the errors of the layers
+                #print("----" + str(i) + "----")
+                #print(self.neuronalNetworkStructure[-2 -i].getLayerName())
+                #print("prev layer error shape: " + str(self.neuronalNetworkStructure[-2 -i + 1].getLayerError().shape))
+                #print("weights shape: " + str(self.neuronalNetworkStructure[-2 -i].getLayerWeights().shape))
+                        
+                layerError = np.dot(self.neuronalNetworkStructure[-2 -i].getLayerWeights(), self.neuronalNetworkStructure[-2 -i +1].getLayerError())
+                #print("layer Error shape: " + str(layerError.shape))
+                
+                ##--- set layer error for backpropagation
+                # inputlayer does not propagate an error back
+                #print(self.neuronalNetworkStructure[-2 -i].getIsInputLayer())
+                if not self.neuronalNetworkStructure[-2 -i].getIsInputLayer():
+                    layerErrorBackpropagation = np.zeros((self.neuronalNetworkStructure[-2 -i].getNumberOfNeurons(), 1))
+                    for j in range(layerErrorBackpropagation.shape[0]):
+                        layerErrorBackpropagation[j] = layerError[j + self.neuronalNetworkStructure[-2 -i].getNumberOfBiasNeurons()]
+                        pass
+                    #print("layer Error Backprop shape: " + str(layerErrorBackpropagation.shape))
+                    self.neuronalNetworkStructure[-2 -i].setLayerError(layerErrorBackpropagation)
+                    pass
                 pass
 
             pass

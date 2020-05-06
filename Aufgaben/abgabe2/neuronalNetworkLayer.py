@@ -41,6 +41,9 @@ class neuronalNetworkLayer():
         self.weights = None
         self.connectToLayer = None
 
+        # --- training
+        self.layerError = None
+
         pass
 
     def __buildLayerNeurons(self):
@@ -176,18 +179,42 @@ class neuronalNetworkLayer():
             self.layerNeurons[self.numberOfBiasNeurons + i].setInput(newInputs[i])
             pass
 
-    pass
+    def getLayerError(self):
+        return self.layerError
+        pass
 
-h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
-h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
+    def setLayerError(self, newLayerError):
+        self.layerError = newLayerError
+        pass
 
-h1.connectTo(h2)
-h1.setRandomWeights()
+    def getLayerName(self):
+        return self.layerName
+        pass
 
-newWeights = np.ones((5,4))
-print(h1.getLayerWeights())
-h1.setWeights(useSpecificWeights=True, specificWeightsArray=newWeights)
-print(h1.getLayerWeights())
+    def getNumberOfBiasNeurons(self):
+        return self.numberOfBiasNeurons
+        pass
+
+    def getNumberOfNeurons(self):
+        return self.numberOfNeurons
+        pass
+
+    def getIsInputLayer(self):
+        return self.isInputLayer
+        pass
+
+    pass 
+
+#h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
+#h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
+
+#h1.connectTo(h2)
+#h1.setRandomWeights()
+
+#newWeights = np.ones((5,4))
+#print(h1.getLayerWeights())
+#h1.setWeights(useSpecificWeights=True, specificWeightsArray=newWeights)
+#print(h1.getLayerWeights())
 
 
 
