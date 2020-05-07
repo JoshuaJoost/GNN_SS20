@@ -32,7 +32,7 @@ validDataValue = 0.8
 
 ## Static values -----------------------------------------
 ##-- Neuronal Network Values
-learningRate = 0.01
+learningRate = 0.1
 
 weightsMinValue = -1.0
 weightsMaxValue = 1.0

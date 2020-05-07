@@ -151,6 +151,16 @@ class neuronalNetworkLayer():
         pass
 
     def getLayerNeuronsOutputValues(self):
+        layerNeuronsOutputValues = np.zeros(self.numberOfNeurons)
+
+        for i in range(layerNeuronsOutputValues.shape[0]):
+            layerNeuronsOutputValues[i] = self.layerNeurons[i + self.numberOfBiasNeurons].getOutput()
+            pass
+
+        return layerNeuronsOutputValues
+        pass
+
+    def getLayerNeuronsAndBiasOutputValues(self):
         layerNeuronsOutputValues = np.zeros(self.layerNeurons.shape[0])
 
         for i in range(layerNeuronsOutputValues.shape[0]):
@@ -210,6 +220,9 @@ class neuronalNetworkLayer():
 
 #h1.connectTo(h2)
 #h1.setRandomWeights()
+
+#print("n+bias: " + str(h1.getLayerNeuronsAndBiasOutputValues()))
+#print("n: " + str(h1.getLayerNeuronsOutputValues()))
 
 #newWeights = np.ones((5,4))
 #print(h1.getLayerWeights())

@@ -134,3 +134,29 @@ def checkForInvalidData_Outside_TheAreaNearTheUnitCircle(pointsArray):
 
     return output
     pass
+
+def evaluatesTrainingCycle(targetValues, isValues):
+    output = ""
+
+    sumErrors = 0
+    for i in range(targetValues.shape[0]):
+        output += "(" + str(targetValues[i]) + " - " + str(isValues[i])
+
+        error = abs(targetValues[i] - isValues[i])
+        if error <= 0.1:
+            output += ") \x1B[32m OK: \x1B[0m Error: " + str(error)
+            pass
+        else:
+            output += ") \x1B[31m ERROR: " + str(error) + "\x1B[0m"
+            sumErrors += 1
+            pass
+
+        if i + 1 < targetValues.shape[0]:
+            output += "\n"
+            pass
+        pass
+
+    output += "\nFehler gesamt: " + str(sumErrors) + "/" + str(targetValues.shape[0])
+
+    return output
+    pass
