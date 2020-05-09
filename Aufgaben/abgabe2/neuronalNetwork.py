@@ -187,11 +187,23 @@ class neuronalNetwork:
                 #print((t1).shape)
                 #print((t2).shape)
                 t3 = np.dot(t1.T, t2)
+
+                #print("t1 shape: " + str(t1.shape))
+                #print("t2.T shape: " + str((t2.T).shape))
+                #print("dot(t2.T,t1) shape: " + str(np.dot(t2.T,t1).shape))
+
+                #TODO replace tmp_lr with constants.learningRate
+                #print("Gewichte aktuell: \n" + str(self.neuronalNetworkStructure[-2 -i].getLayerWeights()))
+                #print("Fehler aktuelle Schicht: \n" + str(self.neuronalNetworkStructure[-2 -i].getLayerError()))
+                tmp_lr = 0.07
+                #print("Gewichtsänderung akt: \n" + str(tmp_lr * t3.T))
+                #print("Alternative Gewichtsänderung: \n" + str(tmp_lr * np.dot(t2.T,t1)))
+
                 #print(t3)
                 #print("alt------------------")
                 #print(self.neuronalNetworkStructure[-2 -i].getLayerWeights())
                 #print("neu------------------")
-                t4 = self.neuronalNetworkStructure[-2 -i].getLayerWeights() + constants.learningRate * t3.T
+                t4 = self.neuronalNetworkStructure[-2 -i].getLayerWeights() + tmp_lr * t3.T
                 #print(t4)
                 self.neuronalNetworkStructure[-2 -i].setWeights(useSpecificWeights=True, specificWeightsArray=t4)
                 
@@ -209,22 +221,26 @@ outputLayer = np.array([1])
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 #print(nn.__str__())
 
-trainData = ownFunctions.trainDataLabeld_shuffeld(5000000)
+trainData = ownFunctions.trainDataLabeld_shuffeld(100000)
 validData = ownFunctions.validDataLabeld(10000)
 invalidData = ownFunctions.invalidDataLabeld(10000)
 
-testDataShuffeld = ownFunctions.trainDataLabeld_shuffeld(1000)
+testDataShuffeld = ownFunctions.trainDataLabeld_shuffeld(100)
 testDataValid = ownFunctions.validDataLabeld(20)
 testDataInvalid = ownFunctions.invalidDataLabeld(20)
 
 nn.trainWithlabeldData(trainData)
-outputs = np.reshape(nn.forwarding(testDataShuffeld), (testDataShuffeld.shape[0]))
+outputsForwarding = nn.forwarding(testDataShuffeld)
 
-targetValues = np.zeros((outputs.shape[0]))
+#outputs = np.reshape(nn.forwarding(testDataShuffeld), (testDataShuffeld.shape[0]))
+
+targetValues = np.zeros((outputsForwarding.shape[0]))
 for i in range(targetValues.shape[0]):
     targetValues[i] = testDataShuffeld[i][2]
     pass
-print(ownTests.evaluatesTrainingCycle(targetValues, outputs))
+#print("targets\n" + str(targetValues) + "\n")
+#print("outputs\n" + str(outputsForwarding) + "\n")
+print(ownTests.evaluatesTrainingCycle(targetValues, outputsForwarding))
 
 
 ##-- manual forwarding
