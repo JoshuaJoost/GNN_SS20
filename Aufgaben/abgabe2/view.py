@@ -109,7 +109,7 @@ def printCircle(value_range, query):
     z = z.reshape(z.shape[0], z.shape[1])
     p = ax.pcolor(x, y, z)
     color_bar = fig.colorbar(p)
-    fig.show()
+    plt.show()
     pass
 #-------------
 # print error standalone

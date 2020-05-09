@@ -18,11 +18,10 @@ from matplotlib import pyplot as plt
 
 # own data imports
 import ownFunctions
-from ownFunctions import generateNValidTrainDataLabeld, generateNInvalidTrainDataLabeld
 import constants
 from constants import numberOfValidTrainData, numberOfInvalidTrainData
 from view import printCircle
-import neuronalNetwork
+import neuronalNetwork as nn
 
 
 ## Generate Traindata -------------------------------------
@@ -31,16 +30,15 @@ import neuronalNetwork
 
 ## init neuronalnetwork
 #nn = neuronalNetwork.neuralNetwork()
+#print("def layer")
+#inputLayer = np.array([1, 2])
+#nHiddenLayer = np.array([[1,4]])
+#outputLayer = np.array([1])
 
-## train neuronalnetwork
-#for i in range(5000):
-#    if i % 2 == 0:
-#        nn.trainWithLabeldData(generateNValidTrainDataLabeld(1))
-#    else:
-#        nn.trainWithLabeldData(generateNInvalidTrainDataLabeld(1))
-#    pass
+#nen = nn.neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
+#trainData = ownFunctions.trainDataLabeld_shuffeld(100000)
 
-#tquery = lambda x,y: nn.query(np.array([x,y])) 
+#tquery = lambda x,y: nen.forwarding(np.array([x,y])) 
 #printCircle(2, tquery)
 
 

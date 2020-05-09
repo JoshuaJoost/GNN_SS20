@@ -429,6 +429,27 @@ def generateRandomWeights_NormalDistributionsCenter(startValue, endValue, number
     return weights
     pass
 
+def getRandomTrainData(numberOfTrainData = 1):
+    trainData = np.zeros((numberOfTrainData, 3))
+
+    for i in range(trainData.shape[0]):
+        rndX = random.uniform(-2, 2)
+        rndY = random.uniform(-2, 2)
+        targetValue = None
+
+        if rndX**2 + rndY**2 <= 1:
+            targetValue = constants.validDataValue
+            pass 
+        else:
+            targetValue = constants.invalidDataValue
+            pass
+
+        trainData[i] = np.array([rndX, rndY, targetValue])
+        pass
+
+    return trainData
+    pass
+
 
 #print(validDataLabeld(1))
 
