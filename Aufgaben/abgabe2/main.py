@@ -20,7 +20,7 @@ from matplotlib import pyplot as plt
 import ownFunctions
 import constants
 from constants import numberOfValidTrainData, numberOfInvalidTrainData
-from view import printCircle
+from view import printCircle, printSummary
 import neuronalNetwork as nn
 
 
@@ -31,17 +31,27 @@ import neuronalNetwork as nn
 ## init neuronalnetwork
 #nn = neuronalNetwork.neuralNetwork()
 #print("def layer")
-#inputLayer = np.array([1, 2])
-#nHiddenLayer = np.array([[1,4]])
-#outputLayer = np.array([1])
+inputLayer = np.array([1, 2])
+nHiddenLayer = np.array([[1,4]])
+outputLayer = np.array([1])
 
-#nen = nn.neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
+nen = nn.neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 #trainData = ownFunctions.trainDataLabeld_shuffeld(100000)
 
-#tquery = lambda x,y: nen.forwarding(np.array([x,y])) 
+tquery = lambda x,y: nen.forwarding(np.array([x,y])) 
+
+
+
+
+# dummy data
+dataError = np.array([0.223, 0.212, 0.201, 0.208, 0.210, 0.203, 0.201, 0.199, 0.198, 0.195, 0.196]).dot(100)
+dataPerformance = np.array([0.123, 0.212, 0.302, 0.404, 0.567, 0.654, 0.778, 0.802, 0.823, 0.845, 0.901]).dot(100)
+
+# standalone
 #printCircle(2, tquery)
 
-
+# summary
+printSummary(dataError, dataPerformance, 2, tquery)
 
 
 

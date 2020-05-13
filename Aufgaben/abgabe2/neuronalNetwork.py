@@ -238,7 +238,7 @@ trainData = ownFunctions.trainDataLabeld_shuffeld(10000)
 nn.trainWithlabeldData(trainData)
 
 tquery = lambda x,y: nn.forwarding(np.array([x,y])) 
-view.printCircle(2, tquery)
+#view.printCircle(2, tquery)
 #outputsForwarding = nn.forwarding(testDataShuffeld)
 
 #outputs = np.reshape(nn.forwarding(testDataShuffeld), (testDataShuffeld.shape[0]))

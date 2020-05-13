@@ -14,31 +14,16 @@ import numpy as np
 import matplotlib
 from matplotlib import pyplot as plt
 
-# dummy data
-dataError = np.array([0.223, 0.212, 0.201, 0.208, 0.210, 0.203, 0.201, 0.199, 0.198, 0.195, 0.196]).dot(100)
-dataPerformance = np.array([0.123, 0.212, 0.302, 0.404, 0.567, 0.654, 0.778, 0.802, 0.823, 0.845, 0.901]).dot(100)
+WINDOW_X_INCH = 9.0
+WINDOW_Y_INCH = 6.5
 
-def dummyCircle(dataError, summary=False):
+def printPerformance(data, summary=False):
 
+    #TODO + errorPerformance: Zusätzliche, eindeutige Markierung für die erreichte Quote auf der linken Skala oder als zusätzliches label
     if(summary is True):
         ax = plt.gca()
     else:
         fig, ax = plt.subplots()
-    
-    t = np.linspace(0,np.pi*2,100)
-    ax.plot(np.cos(t), np.sin(t), linewidth=1)
-
-    return ax
-    pass
-
-def dummyPerformance(data, summary=False):
-    # prepare plot
-    if(summary is True):
-        ax = plt.gca()
-    else:
-        fig, ax = plt.subplots()
-        fig.suptitle("Statistik über Neuronales Netzwerk", fontsize=18, fontweight='bold')
-        fig.subplots_adjust(top=0.83)
         fig.suptitle("Statistik über Neuronales Netzwerk", fontsize=18, fontweight='bold')
         fig.subplots_adjust(top=0.83)
 
@@ -50,14 +35,13 @@ def dummyPerformance(data, summary=False):
     return ax if summary is True else plt.show()
     pass
 
+
 def printErrorPerformance(dataError, summary=False):
-    # prepare plot
+
     if(summary is True):
         ax = plt.gca()
     else:
         fig, ax = plt.subplots()
-        fig.suptitle("Statistik über Neuronales Netzwerk", fontsize=18, fontweight='bold')
-        fig.subplots_adjust(top=0.83)
         fig.suptitle("Statistik über Neuronales Netzwerk", fontsize=18, fontweight='bold')
         fig.subplots_adjust(top=0.83)
 
@@ -69,22 +53,29 @@ def printErrorPerformance(dataError, summary=False):
     return ax if summary is True else plt.show()
     pass
 
-#optional
-def printSummary():
+
+def printSummary(dataError, dataPerformance, value_range, query):
+
     fig = plt.figure()
-    fig.set_size_inches(9.5, 7.5)
+    fig.set_size_inches(WINDOW_X_INCH, WINDOW_Y_INCH)
     
+    # TODO kürzerer Code?
+    #for add_print in [printErrorPerformance(dataError, summary=True), 
+    #            printCircle(value_range, query, summary=True), 
+    #            printPerformance(dataPerformance, summary=True)]:
+
+
     #ax1 error quote
     ax1 = plt.subplot2grid((2,2),(0,0))
     ax1 = printErrorPerformance(dataError, summary=True)
     
     #ax2 circle
     ax2 = plt.subplot2grid((2,2),(0,1))
-    ax2 = dummyCircle(dataError, summary=True)
+    ax2 = printCircle(value_range, query, summary=True)
     
     #ax3 performance
     ax3 = plt.subplot2grid((2,2),(1,0),colspan=2)
-    ax3 = dummyPerformance(dataPerformance, summary=True)
+    ax3 = printPerformance(dataPerformance, summary=True)
     
     fig.suptitle('Aktuelle Statistik zum Neuronalen Netzwerk', fontsize=26)
     fig.subplots_adjust(hspace=0.3, wspace=0.2, top=0.9)
@@ -93,7 +84,8 @@ def printSummary():
     plt.show()
     pass
 
-def printCircle(value_range, query):
+def printCircle(value_range, query, summary=False):
+
     x_range = np.arange(-value_range * 2, value_range * 2, 0.05)
     y_range = np.arange(-value_range * 2, value_range * 2, 0.05)
     x, y = np.meshgrid(x_range, y_range)
@@ -103,20 +95,27 @@ def printCircle(value_range, query):
         for y_coordinate in y_range:
             z_row.append(query(x_coordinate,y_coordinate))
         z.append(z_row)
-    fig, ax = plt.subplots()
+
+    # prepare plot
+    if(summary is True):
+        ax = plt.gca()
+    else:
+        fig, ax = plt.subplots()
+        fig.suptitle("Performance-Circle", fontsize=18, fontweight='bold')
+        fig.subplots_adjust(top=0.83)
+        fig.suptitle("Aktuelle Statistik zum Neuronalen Netzwerk", fontsize=18, fontweight='bold')
+        fig.subplots_adjust(top=0.83)
+
+    ax.set(xlabel='x', ylabel='y', title='Erzielte Verteilung der Daten')
     ax.set_aspect('equal', 'box')
     z = np.array(z)
     z = z.reshape(z.shape[0], z.shape[1])
     p = ax.pcolor(x, y, z)
-    color_bar = fig.colorbar(p)
-    plt.show()
-    pass
-#-------------
-# print error standalone
-#printErrorPerformance(dataError)
+    plt.colorbar(p)
 
-# print summary
-#printSummary()
+    return ax if summary is True else plt.show()
+    
+    pass
 
 
 
