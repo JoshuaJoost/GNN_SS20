@@ -3,7 +3,7 @@ import java.util.Random;
 import java.awt.*;
 import javax.swing.*;
 
-public class MNISTReader2 extends JFrame {
+public class MNISTReader extends JFrame {
 
 	static int m_z=12345,m_w=45678;
 	
@@ -21,17 +21,8 @@ public class MNISTReader2 extends JFrame {
 	double input[] = new double[NEURONS];
 	double reconstructed_input[] = new double[NEURONS];
 
-	double lr = 1;
+	double lr = 0.9;
 	static Random rand = new Random();
-	
-	public static double probabilityOut (double check) {
-		return rand.nextDouble() < check ? 1 : 0;
-	}
-	
-	public static double bayesOut(double current, double sum) {
-		//System.out.println("current / sum: " + current / sum);
-		return (current / sum);
-	}
 	
 	int randomGen()
 	{
@@ -120,7 +111,7 @@ public class MNISTReader2 extends JFrame {
 			InterruptedException {
 
 				
-		MNISTReader2 frame = new MNISTReader2();
+		MNISTReader frame = new MNISTReader();
 
 		frame.readMnistDatabase();
 		frame.setSize(900, 350);
@@ -155,92 +146,127 @@ public class MNISTReader2 extends JFrame {
 		return (current / sum);
 	}
 	
-	
-	
 	public void activateForward(double in[], double w[][],double out[]){
 
+//		for(int i = 0; i < NEURONS; i++) {
+//			
+//			double sum = 0;
+//			
+//			for(int j = 0; j < NEURONS; j++) {
+//				sum += w[i][j] * in[j];
+//			
+//			}
+//			
+//			out[i] = 1 / (1 + Math.exp(-sum));
+//
+//			
+//			//double calculated_current_neuron = (int) probabilityOutput( bayes(in[i], sigmoid ( sum ) ) );			
+//			//out[i] = calculated_current_neuron;
+//		}
+
+		// -----------------
 		
 		for(int i = 0; i < NEURONS; i++) {
+			
+			//double sum = w[i][0]*in[0];
 			
 			double sum = 0;
 			
 			for(int j = 0; j < NEURONS; j++) {
 				sum += w[i][j] * in[j];
-			
 			}
 			
-			out[i] = 1 / (1 + Math.exp(-sum));
-
+			sum+=1;
 			
-			//double calculated_current_neuron = (int) probabilityOutput( bayes(in[i], sigmoid ( sum ) ) );			
-			//out[i] = calculated_current_neuron;
+			out[i] = 1/(1+Math.exp(-sum)) ;
+	
+			
 		}
 		
 
-	}
+	} 
 	
 	public void activateReconstruction(double rec[], double w[][],double out[]){
 
-
+		
 		for(int i = 0; i < NEURONS; i++) {
-			
-			double sum = w[i][0] * out[0];
-			//double sum = 0;
+		
+			double sum = w[i][0]*out[0];
 			
 			for(int j = 0; j < NEURONS; j++) {
 				sum += w[i][j] * out[j];
+			}
+			
+			rec[i] = 1/(1+Math.exp(-sum)) ;
+		}
+		
+		
+//		for(int curr_neuron = 1; curr_neuron < out.length; curr_neuron++) {
+//			
+//			double x_sum = 0;
+//			
+//			for(int curr_weigth = 1; curr_weigth < out.length; curr_weigth++) {
+//	
+//				x_sum += w[curr_neuron][curr_weigth] * out[curr_weigth];
+//			}
+//			
+//			x_sum = x_sum + 1;
+//			double y = sigmoid ( x_sum );
+//
+//			
+//			double calculated_current_neuron = (int) probabilityOutput( bayes(out[curr_neuron], sigmoid ( x_sum ) ) );
+//			rec[curr_neuron] = calculated_current_neuron ;
+//		}
+
+		
+	}
+
+	// TODO Kommentare und Hardcoding beseitigen
+	public void contrastiveDivergence(double inp[], double out[], double rec[], double w[][]) {
+
+		
+		for(int i = 0; i < NEURONS; i++) {
+			
+			double deltaW = 0;
+			
+			for(int j = 0; j < NEURONS; j++) {
+			
+				
+				//System.out.println("w[i][j] old: " + w[i][j]);	
+				
+				deltaW = (inp[i]-rec[i]);
+				
+				// Prüfe ob aktuelles hidden_neuron 0 ist
+				if(out[i]!=0) {
+					
+					// Input-Neuro ist größer als Rekonstruktion
+					if(deltaW > 0) {						
+						w[i][j] += deltaW*lr*out[j];								
+						// Input-Neuro ist kleiner als Rekonstruktion
+					} else {
+						w[i][j] -= -(deltaW*lr*out[j]);
+					}
+					
+				}
+				
+				//System.out.println(deltaW);
+				//w[i][j] += deltaW*out[i]*lr;
+				//System.out.println("w[i][j] new: " + w[i][j]);
 			
 			}
 			
-			
-			//double calculated_current_neuron = (int) probabilityOutput( bayes(out[i], sigmoid ( sum ) ) );			
-			//rec[i] = calculated_current_neuron;
-			//System.out.println(rec[i]);
-			
-			rec[i] = 1 / (1 + Math.exp(-sum));
-		}
-	}
-	
-
-	public void contrastiveDivergence(double inp[], double out[], double rec[], double w[][]) {
-		
-//		for(int ih = 0; ih < NEURONS; ih++) {
-//			
-//			for(int ho = 0; ho < NEURONS; ho++) {
-//				
-//				
-//				if(inp[ih]<rec[ih]) {
-//					
-//				}
-//				
-//			}
-//			
-//		}
+		}		
 		
 		
-//		for(int ih = 1; ih < inp.length-10; ih++) {
-//		
-//		double val = 0;
-//		
-//		for(int ho = 1; ho < out.length-10; ho++) {				
-//		
-//			double rec_error = (inp[ih]-out[ho]);
-//			
-//			if(rec_error < 0) {
-//				w[ih][ho] += -(this.lr * rec_error);
-//			}
-//			
-//			if(rec_error > 0) {
-//				w[ih][ho] += (this.lr * rec_error);
+//		for(int i = 0; i < w.length; i++) {
+//			for(int j = 0; j < w[0].length; j++) {
+//				w[i][j] = w[i][j] + lr * (inp[i]-inp[j]) * out[i];
+//				System.out.println(w[i][j]);
 //			}
 //		}
-//	}
-				
-
-		
 	}
 
-	void trainOrTestNet(boolean train, int maxCount, MNISTReader2 frame){
+	void trainOrTestNet(boolean train, int maxCount, MNISTReader frame){
 		
 		int correct = 0;
 
