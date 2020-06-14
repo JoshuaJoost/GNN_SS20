@@ -126,7 +126,7 @@ class neuronalNetworkLayer():
         pass
 
     def calcInputsNextLayer(self):
-        inputsNextLayer = np.dot(self.getLayerNeuronsInputValues().T, self.weights)
+        inputsNextLayer = np.dot(self.getLayerNeuronsAndBiasOutputValues().T, self.weights) # np.dot(self.getLayerNeuronsInputValues().T, self.weights)
         
         return inputsNextLayer
         pass
@@ -161,10 +161,10 @@ class neuronalNetworkLayer():
         pass
 
     def getLayerNeuronsAndBiasOutputValues(self):
-        layerNeuronsOutputValues = np.zeros(self.layerNeurons.shape[0])
+        layerNeuronsOutputValues = np.zeros([self.layerNeurons.shape[0], 1])
 
         for i in range(layerNeuronsOutputValues.shape[0]):
-            layerNeuronsOutputValues[i] = self.layerNeurons[i].getOutput()
+            layerNeuronsOutputValues[i][0] = self.layerNeurons[i].getOutput()
             pass
 
         return layerNeuronsOutputValues
@@ -187,7 +187,7 @@ class neuronalNetworkLayer():
     def setLayerInputs(self, newInputs):
         for i in range(self.numberOfNeurons):
             self.layerNeurons[self.numberOfBiasNeurons + i].setInput(newInputs[i])
-            pass
+            pass 
 
     def getLayerError(self):
         return self.layerError
@@ -213,9 +213,21 @@ class neuronalNetworkLayer():
         return self.isInputLayer
         pass
 
+    def getLayerDeltavalueMatrix(self):
+        deltavalueMatrix = np.zeros([self.numberOfNeurons,1])
+
+        for deltaValue in range(self.getNumberOfNeurons()):
+            deltavalueMatrix[deltaValue] = self.getLayerNeurons()[deltaValue + self.getNumberOfBiasNeurons()].getDelta()
+            pass
+
+        return deltavalueMatrix
+        pass
+
     pass 
 
 #h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
+#print(h1.getLayerDeltavalueMatrix())
+
 #h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
 
 #h1.connectTo(h2)

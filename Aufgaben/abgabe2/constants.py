@@ -10,6 +10,7 @@ __status__ = "Development"
 # kernel imports
 import scipy.special 
 import numpy as np
+import math
 
 ## Value specifications Task 2 ---------------------------
 # Don't change this values permanently
@@ -18,7 +19,15 @@ biasNeurons = 1 # 1 per layer
 hiddenNeurons = 4 # 1 Hidden Layer
 outputNeurons = 1 # x and y between ]1,-1[ output 0.8 otherwise 0.0
 
-activationSigmoid = lambda x: scipy.special.expit(x) # expit = sigmoidfunction
+# Activation functions
+sigmoid = lambda x: round(1.0 / (1.0 + round(math.e**-round(float(x), 6), 6)), 6)
+
+# Activation functions derived (for backpropagation step)
+sigmoidDerived_1 = lambda x: sigmoid(float(x)) * (1.0 - sigmoid(float(x)))
+
+# Activation function choosed
+activationFunction = lambda x: sigmoid(float(x))
+activationFunctionDerived_1 = lambda x: sigmoidDerived_1(float(x))
 
 xMax = 3
 xMin = -3
@@ -32,7 +41,8 @@ validDataValue = 0.8
 
 ## Static values -----------------------------------------
 ##-- Neuronal Network Values
-learningRate = 0.1
+netinputConstant = 10
+learningRate = 0.02
 
 weightsMinValue = -1.0
 weightsMaxValue = 1.0
@@ -41,7 +51,7 @@ weightsMaxValue = 1.0
 meanSquaredError = lambda targetValue, outputValue: ((targetValue - outputValue)**2).mean(axis=0)
 differenzError = lambda targetValue, outputValue: targetValue - outputValue
 
-    # NeuralNetwork accesses this
+# NeuralNetwork accesses this
 errorfunction = differenzError
 
 ##-- Traindata Values

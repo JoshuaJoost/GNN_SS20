@@ -80,9 +80,4 @@ plt.axis([xMinValue, xMaxValue, yMinValue + (yMinValue / 10), yMaxValue + (yMaxV
 plt.legend()
 plt.show()
 
-# %%
-
-
-# %%
-
 #  Attraktor läuft auf einen Fixpunkt zu (in Richtung des Wertes des Sattelpunkts y = 0)

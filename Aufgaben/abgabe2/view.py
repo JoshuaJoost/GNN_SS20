@@ -101,7 +101,7 @@ def printCircle(value_range, query):
     for x_coordinate in x_range:
         z_row = []
         for y_coordinate in y_range:
-            z_row.append(query(x_coordinate,y_coordinate))
+            z_row.append(query(np.array([x_coordinate,y_coordinate])))
         z.append(z_row)
     fig, ax = plt.subplots()
     ax.set_aspect('equal', 'box')

@@ -11,11 +11,11 @@ __status__ = "Test"
 import numpy as np
 
 # own data imports
-from constants import activationSigmoid
+from constants import activationFunction, netinputConstant
 
 class neuron:
 
-    def __init__(self, layerName, layerNeuronNumber, input = 0, isBiasNeuron = False, isInputNeuron = False, isOutputNeuron=False, activationFunc = activationSigmoid):
+    def __init__(self, layerName, layerNeuronNumber, input = 0, isBiasNeuron = False, isInputNeuron = False, isOutputNeuron=False, activationFunc = activationFunction):
         # init neuron via params
         self.isBiasNeuron = isBiasNeuron
         self.isInputNeuron = isInputNeuron
@@ -27,6 +27,9 @@ class neuron:
 
         # further init 
         self.neuronName = ""
+
+        # backpropagation
+        self.delta = 0.0
 
         # if isBias initialise neuron as bias neuron
         if isBiasNeuron:
@@ -57,11 +60,19 @@ class neuron:
         pass
 
     def setInput(self, newInput):
-        self.input = newInput
+        self.input = newInput * netinputConstant
         pass
 
     def getInput(self):
         return self.input
+        pass
+
+    def setDelta(self, newDeltaValue):
+        self.delta = newDeltaValue
+        pass
+
+    def getDelta(self):
+        return self.delta
         pass
 
     pass

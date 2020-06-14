@@ -13,10 +13,11 @@ __status__ = "Development"
 import numpy as np
 import scipy.special 
 import types
+import random
 
 # own data imports
 import constants
-from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationSigmoid, learningRate
+from constants import inputNeurons, biasNeurons, hiddenNeurons, outputNeurons, activationFunction, activationFunctionDerived_1, learningRate
 from constants import errorfunction
 from constants import inputLayerLabel, hiddenLayerLabel, outputLayerLabel
 import ownFunctions
@@ -147,83 +148,120 @@ class neuronalNetwork:
         for trainData in range(labeldTrainData.shape[0]):
             # forwarding
             output = self.forwarding(labeldTrainData[trainData])
+            #error = labeldTrainData[trainData][2] - output
+            #print(str(error) + "-" + str(output) + " = (error) " + str(error-output))
             
             # calculate error
             # target value - output
-            outputLayerError = np.reshape(errorfunction(labeldTrainData[trainData][-1], output),(1,1))
-            self.neuronalNetworkStructure[-1].setLayerError(outputLayerError)
+            #outputLayerError = np.reshape(errorfunction(labeldTrainData[trainData][-1], output),(1,1))
+            #self.neuronalNetworkStructure[-1].setLayerError(outputLayerError)
             #print(self.neuronalNetworkStructure[-1].getLayerError())
 
             # backpropagation
+            # calculate and set delta value
             for i in range(self.neuronalNetworkStructure.shape[0] - 1):
-                ##--- Calculate the new weights depending on the error of the following layer
-                # Set the errors of the layers
-                #print("----" + str(i) + "----")
-                #print(self.neuronalNetworkStructure[-2 -i].getLayerName())
-                #print("prev layer error shape: " + str(self.neuronalNetworkStructure[-2 -i + 1].getLayerError().shape))
-                #print("weights shape: " + str(self.neuronalNetworkStructure[-2 -i].getLayerWeights().shape))
+                # output layer
+                if i == 0:
+                    for outputNeuronI in range(self.neuronalNetworkStructure[-1 - i].getNumberOfNeurons()):
+                        networkInputOutputneuronI = self.neuronalNetworkStructure[-1 - i].getLayerNeurons()[outputNeuronI].getInput()
+                        deltaOutputNeuronI = activationFunctionDerived_1(networkInputOutputneuronI) * (labeldTrainData[trainData][2] - output[outputNeuronI])
                         
-                layerError = np.dot(self.neuronalNetworkStructure[-2 -i].getLayerWeights(), self.neuronalNetworkStructure[-2 -i +1].getLayerError())
-                #print("layer Error shape: " + str(layerError.shape))
-                
-                ##--- set layer error for backpropagation
-                # inputlayer does not propagate an error back
-                #print(self.neuronalNetworkStructure[-2 -i].getIsInputLayer())
-                if not self.neuronalNetworkStructure[-2 -i].getIsInputLayer():
-                    layerErrorBackpropagation = np.zeros((self.neuronalNetworkStructure[-2 -i].getNumberOfNeurons(), 1))
-                    for j in range(layerErrorBackpropagation.shape[0]):
-                        layerErrorBackpropagation[j] = layerError[j + self.neuronalNetworkStructure[-2 -i].getNumberOfBiasNeurons()]
+                        # set delta value
+                        self.neuronalNetworkStructure[-1 - i].getLayerNeurons()[outputNeuronI].setDelta(deltaOutputNeuronI)
                         pass
-                    #print("layer Error Backprop shape: " + str(layerErrorBackpropagation.shape))
-                    self.neuronalNetworkStructure[-2 -i].setLayerError(layerErrorBackpropagation)
-                    pass
-
-                ##--- Adjusting the weights
-                errorNextLayer = np.reshape(self.neuronalNetworkStructure[-2 -i +1].getLayerError(), (-1))
-                outputNextLayer = self.neuronalNetworkStructure[-2 -i +1].getLayerNeuronsOutputValues()
-                outputThisLayer = self.neuronalNetworkStructure[-2 -i].getLayerNeuronsAndBiasOutputValues()
-
-                t1 = np.array(errorNextLayer * outputNextLayer * (1 - outputNextLayer), ndmin=2).T
-                #print("t1: " + str(t1))
-                t2 = np.array(outputThisLayer, ndmin=2).T
-                #print((t1).shape)
-                #print((t2).shape)
-                t3 = np.dot(t1, t2.T)
-
-                #print("t1 shape: " + str(t1.shape))
-                #print("t2.T shape: " + str((t2).shape))
-                #print("dot(t2.T,t1) shape: " + str(np.dot(t2.T,t1).shape))
-
-                #TODO replace tmp_lr with constants.learningRate
-                #print("Gewichte aktuell: \n" + str(self.neuronalNetworkStructure[-2 -i].getLayerWeights()))
-                #print("Fehler vorheringe Schicht: \n" + str(self.neuronalNetworkStructure[-2 -i + 1].getLayerError()))
-                tmp_lr = 0.1
-                #print("Gewichtsänderung akt: \n" + str(tmp_lr * t3.T))
-                #print("Alternative Gewichtsänderung: \n" + str(tmp_lr * np.dot(t2.T,t1)))
-
-                #print(t3)
-                #print("alt------------------")
-                #print(self.neuronalNetworkStructure[-2 -i].getLayerWeights())
-                #print("neu------------------")
-                t4 = self.neuronalNetworkStructure[-2 -i].getLayerWeights() + tmp_lr * t3.T
-                #print(t4)
-                self.neuronalNetworkStructure[-2 -i].setWeights(useSpecificWeights=True, specificWeightsArray=t4)
-                
+                    pass 
+                # hidden layer
+                else:
+                    for neuron in range(self.neuronalNetworkStructure[-1 -i].getLayerNeurons().size - self.neuronalNetworkStructure[-1 -i].getNumberOfBiasNeurons()):
+                        networkInputHiddenneuronI = self.neuronalNetworkStructure[-1 - i].getLayerNeurons()[neuron + self.neuronalNetworkStructure[-1 - i].getNumberOfBiasNeurons()].getInput()
+                        deltaHiddenNeuronI = activationFunctionDerived_1(networkInputHiddenneuronI) * (np.dot(self.neuronalNetworkStructure[-1 - i].getLayerWeights()[neuron + self.neuronalNetworkStructure[-1 - i].getNumberOfBiasNeurons()],self.neuronalNetworkStructure[-1 - i + 1].getLayerDeltavalueMatrix()))
+                        
+                        # set delta value
+                        self.neuronalNetworkStructure[-1 - i].getLayerNeurons()[neuron + self.neuronalNetworkStructure[-1 - i].getNumberOfBiasNeurons()].setDelta(deltaHiddenNeuronI)
+                        pass                    
+                    pass              
                 pass
 
+            # calculate and set new weights
+            for i in range(self.neuronalNetworkStructure.shape[0] - 1):
+                # calculate the delta value of the weights
+                deltaWeights = learningRate * (np.dot(self.neuronalNetworkStructure[-1 - i].getLayerDeltavalueMatrix(), self.neuronalNetworkStructure[-1 - i - 1].getLayerNeuronsAndBiasOutputValues().T))
+                #print("old weights -------------------")
+                #print(self.neuronalNetworkStructure[-1 - i - 1].getLayerWeights())
+                #print("New Weights ------------------")
+                #print("delta weights: " + str(deltaWeights.T.shape))
+                #print(str(deltaWeights.T))
+
+                # calculate and set new weights
+                #print("old weights: " + str(self.neuronalNetworkStructure[-1 - i -1].getLayerWeights()))
+                newWeights = self.neuronalNetworkStructure[-1 - i -1].getLayerWeights() + deltaWeights.T
+                self.neuronalNetworkStructure[-1 - i -1].setWeights(useSpecificWeights = True, specificWeightsArray = newWeights)
+                #print("new weights: " + str(newWeights))
+                pass
             pass
         pass
 
     pass
  
 inputLayer = np.array([1, 2])
-nHiddenLayer = np.array([[1,4],[1,4],[1,4],[1,4]])
+nHiddenLayer = np.array([[1,4]])
 outputLayer = np.array([1])
 
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
-trainData = ownFunctions.trainDataLabeld_shuffeld(10000)
 
+## -- Training phase
+trainData = ownFunctions.getRandomTrainData(200000)
+#print(trainData)
+np.random.shuffle(trainData)
+#print(trainData)
+trainDataValid = ownFunctions.validDataLabeld(10000)
+trainDataInvalid = ownFunctions.invalidDataLabeld(10000)
 
+print("Trainingsphase 1")
+nn.trainWithlabeldData(trainData)
+#print("Trainingsphase 2")
+#nn.trainWithlabeldData(trainDataValid)
+#print("Trainingsphase 3")
+#nn.trainWithlabeldData(trainData)
+#print("Trainingsphase 4")
+#nn.trainWithlabeldData(trainData)
+#print("Trainingsphase 5")
+#nn.trainWithlabeldData(trainData)
+print("Training beendet")
+
+## -- Test phase
+#testData = trainData # Indexpositions: 0 = x, 1 = y, 2 = targetValue
+testData = ownFunctions.trainDataLabeld_shuffeld(100) #np.zeros([100, 3])
+
+#tmpTrainData = trainData
+#for i in range(testData.shape[0]):
+#    index = int(random.uniform(0, tmpTrainData.shape[0] - 1))
+
+#    testData[i] = tmpTrainData[index]
+
+#    tmpTrainData = np.delete(tmpTrainData, index, 0)
+#    pass
+
+outputsForwarding = nn.forwarding(testData)
+
+## -- Evaluation phase
+okValue = 0
+
+print("Output --- Target")
+for i in range(outputsForwarding.size):
+    if abs(testData[i][2] - outputsForwarding[i]) >= 0 and abs(testData[i][2] - outputsForwarding[i]) <= 0.2:
+        print("\x1B[32m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
+        okValue += 1
+        pass
+    else:
+        print("\x1B[31m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
+        pass
+
+    pass
+print(str(int(okValue * testData.shape[0] / 100)) + '% richtig')
+
+# ----------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------
 #print(data)
 #print(nn.__str__())
 
@@ -235,17 +273,17 @@ trainData = ownFunctions.trainDataLabeld_shuffeld(10000)
 #testDataValid = ownFunctions.validDataLabeld(20)
 #testDataInvalid = ownFunctions.invalidDataLabeld(20)
 
-nn.trainWithlabeldData(trainData)
+#nn.trainWithlabeldData(trainData)
 
-tquery = lambda x,y: nn.forwarding(np.array([x,y])) 
-view.printCircle(2, tquery)
+#tquery = lambda x,y: 0.8 if x**2 + y**2 <= 1 else 0.0
+view.printCircle(2, query = nn.forwarding)
 #outputsForwarding = nn.forwarding(testDataShuffeld)
 
 #outputs = np.reshape(nn.forwarding(testDataShuffeld), (testDataShuffeld.shape[0]))
 
 #targetValues = np.zeros((outputsForwarding.shape[0]))
 #for i in range(targetValues.shape[0]):
-#    targetValues[i] = testDataShuffeld[i][2]
+#    targetValues[i] = trainData[i][2] # testDataShuffeld[i][2]
 #    pass
 #print("targets\n" + str(targetValues) + "\n")
 #print("outputs\n" + str(outputsForwarding) + "\n")
