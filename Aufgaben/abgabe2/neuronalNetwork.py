@@ -77,61 +77,22 @@ class neuronalNetwork:
         return outputNeuronalNetworkStructure
         pass
 
-    # Query neural network
-    def forwarding(self, input):
-        outputs = None #np.zeros((input.shape[0], self.neuronalNetworkStructure[-1].numberOfNeurons))
-
-        if len(input.shape) < 1 and len(input.shape) > 2:
-            raise ValueError("Als Eingabe wird ein 1Dim oder 2Dim Array erwartet")
+    # forwarding function neuronal network
+    # :param input: type = np.array, shape = 3 [x, y, targetValue]
+    def forwarding(self, input):  
+        for layer in range(self.neuronalNetworkStructure.size):
+            # set values of input layer
+            if self.neuronalNetworkStructure[layer].getIsInputLayer():
+                # target value is not considered
+                self.neuronalNetworkStructure[layer].setLayerInputs(input[:-1])
+                pass
+            # set values of hidden and output layer (in the same way)
+            else:
+                self.neuronalNetworkStructure[layer].setLayerInputs(np.dot(self.neuronalNetworkStructure[layer - 1].getLayerNeuronsAndBiasOutputValues().T, self.neuronalNetworkStructure[layer - 1].getLayerWeights())[0])
+                pass
             pass
 
-        # 1Dim Traindata
-        if len(input.shape) == 1:
-            outputs = np.zeros(self.neuronalNetworkStructure[-1].numberOfNeurons)
-
-            if input.shape[0] < self.neuronalNetworkStructure[0].numberOfNeurons:
-                errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
-                raise ValueError(errorMsg)
-                pass
-
-            self.neuronalNetworkStructure[0].setLayerInputs(input[:self.neuronalNetworkStructure[0].numberOfNeurons])
-
-            for layer in range(self.neuronalNetworkStructure.size - 1):
-                self.neuronalNetworkStructure[layer].setInputsNextLayer()
-                self.neuronalNetworkStructure[layer + 1].getLayerNeuronsAndBiasOutputValues()
-                pass
-
-            for outputneuron in range(self.neuronalNetworkStructure[-1].numberOfNeurons):
-                outputs[outputneuron] = self.neuronalNetworkStructure[-1].getLayerNeuronsAndBiasOutputValues()[outputneuron]
-                pass
-
-            pass
-
-        # 2Dim Traindata
-        elif len(input.shape) == 2:
-            outputs = np.zeros((input.shape[0], self.neuronalNetworkStructure[-1].numberOfNeurons))
-
-            if input.shape[1] < self.neuronalNetworkStructure[0].numberOfNeurons:
-                errorMsg = "Eingegebene Werte müsse der Anzahl an Neuronen entsprechen, hier: shape Array der Daten zum Formwarden " + str(input.shape[1]) + ", Anzahl der InputNeuronen " + str(self.neuronalNetworkStructure[0].numberOfNeurons)
-                raise ValueError(errorMsg)
-                pass
-
-            for queryData in range(input.shape[0]):
-                # The first n parameters are used as input parameters. All others (label parameters) are ignored.
-                self.neuronalNetworkStructure[0].setLayerInputs(input[queryData][:self.neuronalNetworkStructure[0].numberOfNeurons])
-
-                for layer in range(self.neuronalNetworkStructure.size - 1):
-                    self.neuronalNetworkStructure[layer].setInputsNextLayer()
-                    self.neuronalNetworkStructure[layer + 1].getLayerNeuronsOutputValues()
-                    pass
-
-                for outputneuron in range(self.neuronalNetworkStructure[-1].numberOfNeurons):
-                    outputs[queryData][outputneuron] = self.neuronalNetworkStructure[-1].getLayerNeuronsOutputValues()[outputneuron]
-                    pass
-
-            pass
-
-        return outputs
+        return self.neuronalNetworkStructure[-1].getLayerNeuronsAndBiasOutputValues()
         pass
 
     # :param2: labeldTrainData: Data must have the shape (numberOfTrainingData, numberOfInputValues + 1), numberOfInputValues = numberOfInputNeurons
@@ -209,16 +170,24 @@ outputLayer = np.array([1])
 
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 
-## -- Training phase
-trainData = ownFunctions.getRandomTrainData(200000)
-#print(trainData)
-np.random.shuffle(trainData)
-#print(trainData)
-trainDataValid = ownFunctions.validDataLabeld(10000)
-trainDataInvalid = ownFunctions.invalidDataLabeld(10000)
+trainData = ownFunctions.getRandomTrainData(1)
 
-print("Trainingsphase 1")
-nn.trainWithlabeldData(trainData)
+for i in range(trainData.shape[0]):
+    print(nn.forwarding(trainData[i]))
+    pass
+
+
+
+## -- Training phase
+#trainData = ownFunctions.getRandomTrainData(200000)
+#print(trainData)
+#np.random.shuffle(trainData)
+#print(trainData)
+#trainDataValid = ownFunctions.validDataLabeld(10000)
+#trainDataInvalid = ownFunctions.invalidDataLabeld(10000)
+
+#print("Trainingsphase 1")
+#nn.trainWithlabeldData(trainData)
 #print("Trainingsphase 2")
 #nn.trainWithlabeldData(trainDataValid)
 #print("Trainingsphase 3")
@@ -227,11 +196,11 @@ nn.trainWithlabeldData(trainData)
 #nn.trainWithlabeldData(trainData)
 #print("Trainingsphase 5")
 #nn.trainWithlabeldData(trainData)
-print("Training beendet")
+#print("Training beendet")
 
 ## -- Test phase
 #testData = trainData # Indexpositions: 0 = x, 1 = y, 2 = targetValue
-testData = ownFunctions.trainDataLabeld_shuffeld(100) #np.zeros([100, 3])
+#testData = ownFunctions.trainDataLabeld_shuffeld(100) #np.zeros([100, 3])
 
 #tmpTrainData = trainData
 #for i in range(testData.shape[0]):
@@ -242,23 +211,23 @@ testData = ownFunctions.trainDataLabeld_shuffeld(100) #np.zeros([100, 3])
 #    tmpTrainData = np.delete(tmpTrainData, index, 0)
 #    pass
 
-outputsForwarding = nn.forwarding(testData)
+#outputsForwarding = nn.forwarding(testData)
 
 ## -- Evaluation phase
-okValue = 0
+#okValue = 0
 
-print("Output --- Target")
-for i in range(outputsForwarding.size):
-    if abs(testData[i][2] - outputsForwarding[i]) >= 0 and abs(testData[i][2] - outputsForwarding[i]) <= 0.2:
-        print("\x1B[32m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
-        okValue += 1
-        pass
-    else:
-        print("\x1B[31m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
-        pass
+#print("Output --- Target")
+#for i in range(outputsForwarding.size):
+#    if abs(testData[i][2] - outputsForwarding[i]) >= 0 and abs(testData[i][2] - outputsForwarding[i]) <= 0.2:
+#        print("\x1B[32m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
+#        okValue += 1
+#        pass
+#    else:
+#        print("\x1B[31m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
+#        pass
 
-    pass
-print(str(int(okValue * testData.shape[0] / 100)) + '% richtig')
+#    pass
+#print(str(int(okValue * testData.shape[0] / 100)) + '% richtig')
 
 # ----------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------
@@ -276,7 +245,7 @@ print(str(int(okValue * testData.shape[0] / 100)) + '% richtig')
 #nn.trainWithlabeldData(trainData)
 
 #tquery = lambda x,y: 0.8 if x**2 + y**2 <= 1 else 0.0
-view.printCircle(2, query = nn.forwarding)
+#view.printCircle(2, query = nn.forwarding)
 #outputsForwarding = nn.forwarding(testDataShuffeld)
 
 #outputs = np.reshape(nn.forwarding(testDataShuffeld), (testDataShuffeld.shape[0]))

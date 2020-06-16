@@ -11,7 +11,7 @@ __status__ = "Test"
 import numpy as np
 
 # own data imports
-from constants import activationFunction, netinputConstant
+from constants import activationFunction
 
 class neuron:
 
@@ -60,7 +60,7 @@ class neuron:
         pass
 
     def setInput(self, newInput):
-        self.input = newInput * netinputConstant
+        self.input = newInput
         pass
 
     def getInput(self):

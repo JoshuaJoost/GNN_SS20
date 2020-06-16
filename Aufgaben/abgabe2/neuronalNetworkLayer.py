@@ -186,8 +186,11 @@ class neuronalNetworkLayer():
 
     def setLayerInputs(self, newInputs):
         for i in range(self.numberOfNeurons):
-            self.layerNeurons[self.numberOfBiasNeurons + i].setInput(newInputs[i])
-            pass 
+            self.layerNeurons[i + self.numberOfBiasNeurons].setInput(newInputs[i])
+            pass
+
+        pass
+        
 
     def getLayerError(self):
         return self.layerError
@@ -211,6 +214,10 @@ class neuronalNetworkLayer():
 
     def getIsInputLayer(self):
         return self.isInputLayer
+        pass
+
+    def getIsOutputLayer(self):
+        return self.isOutputLayer
         pass
 
     def getLayerDeltavalueMatrix(self):

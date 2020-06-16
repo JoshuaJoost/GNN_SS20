@@ -41,7 +41,6 @@ validDataValue = 0.8
 
 ## Static values -----------------------------------------
 ##-- Neuronal Network Values
-netinputConstant = 10
 learningRate = 0.02
 
 weightsMinValue = -1.0
