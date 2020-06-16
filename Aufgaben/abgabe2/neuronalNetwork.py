@@ -78,13 +78,24 @@ class neuronalNetwork:
         pass
 
     # forwarding function neuronal network
-    # :param input: type = np.array, shape = 3 [x, y, targetValue]
+    # :param input: type = np.array, shape = 3 [x, y, targetValue] or shape = 2 [x, y]
     def forwarding(self, input):  
         for layer in range(self.neuronalNetworkStructure.size):
             # set values of input layer
             if self.neuronalNetworkStructure[layer].getIsInputLayer():
                 # target value is not considered
-                self.neuronalNetworkStructure[layer].setLayerInputs(input[:-1])
+
+                if input.shape[0] == 2:
+                    # input: shape [x, y]
+                    self.neuronalNetworkStructure[layer].setLayerInputs(input[:])
+                    pass
+                elif input.shape[0] == 3:
+                    # input: shape [x, y, targetValue]
+                    self.neuronalNetworkStructure[layer].setLayerInputs(input[:-1])
+                    pass
+                else:
+                    raise ValueError("Der forwarding Funktion muss ein Array des Shape 2 (x,y) oder 3 (x,y,targetValue) übergeben werden. Übergebener shape: " + str(input.shape[0]))
+                    pass
                 pass
             # set values of hidden and output layer (in the same way)
             else:
