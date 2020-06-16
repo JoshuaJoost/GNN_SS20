@@ -79,7 +79,8 @@ class neuronalNetwork:
 
     # forwarding function neuronal network
     # :param input: type = np.array, shape = 3 [x, y, targetValue] or shape = 2 [x, y]
-    def forwarding(self, input):  
+    def forwarding(self, input): 
+        #print(input) 
         for layer in range(self.neuronalNetworkStructure.size):
             # set values of input layer
             if self.neuronalNetworkStructure[layer].getIsInputLayer():
@@ -180,24 +181,16 @@ outputLayer = np.array([1])
 
 nn = neuronalNetwork(inputLayer, nHiddenLayer, outputLayer)
 
-trainData = ownFunctions.getRandomTrainData(1)
-
-for i in range(trainData.shape[0]):
-    print(nn.forwarding(trainData[i]))
-    pass
-
-
-
 ## -- Training phase
-#trainData = ownFunctions.getRandomTrainData(200000)
+trainData = ownFunctions.getRandomTrainData(150000)
 #print(trainData)
 #np.random.shuffle(trainData)
 #print(trainData)
-#trainDataValid = ownFunctions.validDataLabeld(10000)
-#trainDataInvalid = ownFunctions.invalidDataLabeld(10000)
+#trainData = ownFunctions.validDataLabeld(10000)
+#trainData = ownFunctions.invalidDataLabeld(10000)
 
-#print("Trainingsphase 1")
-#nn.trainWithlabeldData(trainData)
+print("Trainingsphase 1")
+nn.trainWithlabeldData(trainData)
 #print("Trainingsphase 2")
 #nn.trainWithlabeldData(trainDataValid)
 #print("Trainingsphase 3")
@@ -210,34 +203,35 @@ for i in range(trainData.shape[0]):
 
 ## -- Test phase
 #testData = trainData # Indexpositions: 0 = x, 1 = y, 2 = targetValue
-#testData = ownFunctions.trainDataLabeld_shuffeld(100) #np.zeros([100, 3])
+testData = ownFunctions.trainDataLabeld_shuffeld(100) #np.zeros([100, 3])
 
 #tmpTrainData = trainData
 #for i in range(testData.shape[0]):
 #    index = int(random.uniform(0, tmpTrainData.shape[0] - 1))
 
 #    testData[i] = tmpTrainData[index]
-
-#    tmpTrainData = np.delete(tmpTrainData, index, 0)
-#    pass
+#
+ #   tmpTrainData = np.delete(tmpTrainData, index, 0)
+  #  pass
 
 #outputsForwarding = nn.forwarding(testData)
 
 ## -- Evaluation phase
-#okValue = 0
+okValue = 0
 
-#print("Output --- Target")
-#for i in range(outputsForwarding.size):
-#    if abs(testData[i][2] - outputsForwarding[i]) >= 0 and abs(testData[i][2] - outputsForwarding[i]) <= 0.2:
-#        print("\x1B[32m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
-#        okValue += 1
-#        pass
-#    else:
-#        print("\x1B[31m" + str(outputsForwarding[i]) + " --- " + str(testData[i][2]) + "\x1B[0m")
-#        pass
+print("Output --- Target")
+for i in range(testData.shape[0]):
+    nnForwardingValue = nn.forwarding(testData[i])
+    if abs(testData[i][2] - nnForwardingValue) >= 0 and abs(testData[i][2] - nnForwardingValue) <= 0.2:
+        print("\x1B[32m" + str(nnForwardingValue) + " --- " + str(testData[i][2]) + "\x1B[0m")
+        okValue += 1
+        pass
+    else:
+        print("\x1B[31m" + str(nnForwardingValue) + " --- " + str(testData[i][2]) + "\x1B[0m")
+        pass
 
-#    pass
-#print(str(int(okValue * testData.shape[0] / 100)) + '% richtig')
+    pass
+print(str(int(okValue * testData.shape[0] / 100)) + '% richtig')
 
 # ----------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------
@@ -255,7 +249,7 @@ for i in range(trainData.shape[0]):
 #nn.trainWithlabeldData(trainData)
 
 #tquery = lambda x,y: 0.8 if x**2 + y**2 <= 1 else 0.0
-#view.printCircle(2, query = nn.forwarding)
+view.printCircle(2, query = nn.forwarding)
 #outputsForwarding = nn.forwarding(testDataShuffeld)
 
 #outputs = np.reshape(nn.forwarding(testDataShuffeld), (testDataShuffeld.shape[0]))
