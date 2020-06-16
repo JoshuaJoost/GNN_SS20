@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+
+
+\title{Restricted Boltzmann Machine}
+\author{Joshua Joost (1626034), Sedat Cakici (1713179), Rosario Allegro (1813064)}
+\date{15. Juni 2020}
+
+\begin{document}
+
+\maketitle
+
+\section{Idee hinter Restricted Boltzmann Machine}
+Die Idee bzw. Besonderheit hinter der Restricted Boltzmann Maschine ist die Tatsache, dass sie aus einem Eingabe- und einer Hiddenschicht besteht. Die jeweiligen Eingaben werden entsprechend mit den Gewichten multipliziert, das Bias-Neuron hinzuaddiert und darauf der Sigmoid-Funktion angewendet. 
+Die Besonderheit bei diesen Neuronales Netz ist, dass kein Ausgabeschicht in dem klassischen Sinne existiert. Tatsächlich wird als Ausgabeschicht die Eingabeschicht anhand den Gewichten und den Hidden-Neuronen rekonstruiert. 
+
+Das System lernt über das sogenannte Contrastive Divergence-Algorithmus, welcher die Eingabe- und die rekonstruierte Neuronen miteinander vergleicht und die Gewichte daraufhin entsprechend anpasst. Populär wurde dieses System bei der Anwendung von Kollaborative Filtern wie etwa auf Netflix \cite{aristotle:physics}.
+
+\section{Wahl der Version}
+Wir hatten zu Beginn die Auswahl zwischen der Java- und der C++-Version des Programmes, um dieses laut Aufgabenstellung zu ergänzen. Letztlich haben wir uns für die Java-Version entschieden. Dies fiel uns leichter, da wir Java gut beherrschten und uns wesentlich schneller einarbeiten konnten.
+
+\section{Lösen der Aufgaben}
+Die Aufgabe bestand hierbei, die drei Methoden activeForwand, activeReconstruction und contrastiveDivergence zu ergänzen. Das Programm sollte hierbei die Eingaben von in Pixel-umgewandelten, Handgezeichneten Zahlen rekonstruieren. Im activeForward sind wir hierbei durch alle Input-Neuronen durchgegangen und haben diese mit den Gewichte multipliziert und darauf die Sigmoid-Funktion angewendet. Daraus entstand die Hiddenschicht. Das entsprechende visuelle Feedback gab uns ein willkürliches Bild. Beim activeReconstruction wurde das Bild durch die Gewichte und der Hiddenschicht rekonstruiert, in dem wir alle Neuronen der Hiddenschicht mit den selben Gewichten multipliziert und den Sigmoid-Funktion darauf angewendet haben. Beim ContrastiveDivergence-Methode war die Schwierigkeit, die Neuronen aus der Eingabe- als auch der Rekonstruktionsschicht miteinander zu vergleichen und eine entsprechende Gewichtsaktualisierung auszuführen. Hierbei kam es zur Fallunterscheidung abhängig vom Hidden-Neuron, ob diese tatsächlich "aktiv" oder inaktiv, also gleich 0, ist. Entsprechend wurde anschließend die Delta-Formel aus der Vorlesung bekannt angewendet, um die Gewichte zu aktualisieren. Als Ergebnis kam ein passend rekonstruiertes Bild raus mit einer Erkennungsrate von 99,9899 %.
+
+\section{Feedback}
+Durch diese Abgabe haben wir ein gutes Gefühl erhalten, wie die sogenannten Restricted Boltzmann Machine funktionieren. Wir konnten mit Erstaunen feststellen, dass ein RBM mit nur wenigen Zeilen Codes tatsächlich ein ganzes Bild rekonstruieren und daraus lernen kann.
+
+\end{document}

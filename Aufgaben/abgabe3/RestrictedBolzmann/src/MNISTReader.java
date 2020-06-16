@@ -1,3 +1,15 @@
+/**
+ * Pflichtabgabe 3: Restricted Boltzmann Maschine
+ * Ergänzung von drei folgenden Methoden activeForwand, activeReconstruction und contrastiveDivergence
+ *
+ * @author Joshua Joost (1626034)
+ * @author Sedat Cakici (1713179)
+ * @author Rosario Allegro (1813064)
+ * 
+ * @date 14.06.2020
+ * @version 1.1
+ */
+
 import java.io.*;
 import java.util.Random;
 import java.awt.*;
@@ -21,7 +33,7 @@ public class MNISTReader extends JFrame {
 	double input[] = new double[NEURONS];
 	double reconstructed_input[] = new double[NEURONS];
 
-	double lr = 0.9;
+	double lr = 2;
 	static Random rand = new Random();
 	
 	int randomGen()
@@ -110,7 +122,6 @@ public class MNISTReader extends JFrame {
 	public static void main(String[] args) throws IOException,
 			InterruptedException {
 
-				
 		MNISTReader frame = new MNISTReader();
 
 		frame.readMnistDatabase();
@@ -133,42 +144,25 @@ public class MNISTReader extends JFrame {
 		}
 	}
 	
+    /**
+     * Sigmoid-Funktion
+     *
+     * @param x Parameter zur Berechnung
+     */
 	public static double sigmoid(double x) {
 		return (1 / ( 1 + Math.pow(Math.E, (-1*x))));
 	}
 	
-	public static double probabilityOutput(double check) {
-		return rand.nextDouble() < check ? 1 : 0;
-	}
-	
-	public static double bayes(double current, double sum) {
-		//System.out.println("current / sum: " + current / sum);
-		return (current / sum);
-	}
-	
+	/**
+	 * Funktion zur Vorwärtsaktivierung
+	 * 
+	 * @param in Inputneuronen
+	 * @param w Gewichte
+	 * @param out Hidden-Schicht
+	 */
 	public void activateForward(double in[], double w[][],double out[]){
-
-//		for(int i = 0; i < NEURONS; i++) {
-//			
-//			double sum = 0;
-//			
-//			for(int j = 0; j < NEURONS; j++) {
-//				sum += w[i][j] * in[j];
-//			
-//			}
-//			
-//			out[i] = 1 / (1 + Math.exp(-sum));
-//
-//			
-//			//double calculated_current_neuron = (int) probabilityOutput( bayes(in[i], sigmoid ( sum ) ) );			
-//			//out[i] = calculated_current_neuron;
-//		}
-
-		// -----------------
 		
 		for(int i = 0; i < NEURONS; i++) {
-			
-			//double sum = w[i][0]*in[0];
 			
 			double sum = 0;
 			
@@ -177,15 +171,17 @@ public class MNISTReader extends JFrame {
 			}
 			
 			sum+=1;
-			
-			out[i] = 1/(1+Math.exp(-sum)) ;
-	
-			
+			out[i] = sigmoid(sum);
 		}
-		
-
 	} 
 	
+	/**
+	 * Funktion zur Rekonstruktion der Inputneuronen
+	 * 
+	 * @param rec Ausgangsparameter für die rekonstruierte Neuronen
+	 * @param w Gewichte
+	 * @param out Eingangsparameter ausgehend von der Hiddenschicht
+	 */
 	public void activateReconstruction(double rec[], double w[][],double out[]){
 
 		
@@ -197,33 +193,19 @@ public class MNISTReader extends JFrame {
 				sum += w[i][j] * out[j];
 			}
 			
-			rec[i] = 1/(1+Math.exp(-sum)) ;
+			rec[i] = sigmoid(sum);
 		}
-		
-		
-//		for(int curr_neuron = 1; curr_neuron < out.length; curr_neuron++) {
-//			
-//			double x_sum = 0;
-//			
-//			for(int curr_weigth = 1; curr_weigth < out.length; curr_weigth++) {
-//	
-//				x_sum += w[curr_neuron][curr_weigth] * out[curr_weigth];
-//			}
-//			
-//			x_sum = x_sum + 1;
-//			double y = sigmoid ( x_sum );
-//
-//			
-//			double calculated_current_neuron = (int) probabilityOutput( bayes(out[curr_neuron], sigmoid ( x_sum ) ) );
-//			rec[curr_neuron] = calculated_current_neuron ;
-//		}
-
-		
 	}
 
-	// TODO Kommentare und Hardcoding beseitigen
+	/**
+	 * Fehlerkorrektur mit jeweils Fallunterscheidung ob gewähltes Neuron aktiv/inaktiv ist
+	 * 
+	 * @param inp Inputschicht
+	 * @param out Hiddenschicht
+	 * @param rec "Outputschicht"/Rekonstruierte Schicht
+	 * @param w Gewichte
+	 */
 	public void contrastiveDivergence(double inp[], double out[], double rec[], double w[][]) {
-
 		
 		for(int i = 0; i < NEURONS; i++) {
 			
@@ -231,9 +213,7 @@ public class MNISTReader extends JFrame {
 			
 			for(int j = 0; j < NEURONS; j++) {
 			
-				
-				//System.out.println("w[i][j] old: " + w[i][j]);	
-				
+				// Erzeuge DeltaW aus dem Differenz zwischen Input- und Rekonstruiertes Neuron
 				deltaW = (inp[i]-rec[i]);
 				
 				// Prüfe ob aktuelles hidden_neuron 0 ist
@@ -245,25 +225,10 @@ public class MNISTReader extends JFrame {
 						// Input-Neuro ist kleiner als Rekonstruktion
 					} else {
 						w[i][j] -= -(deltaW*lr*out[j]);
-					}
-					
+					}					
 				}
-				
-				//System.out.println(deltaW);
-				//w[i][j] += deltaW*out[i]*lr;
-				//System.out.println("w[i][j] new: " + w[i][j]);
-			
 			}
-			
 		}		
-		
-		
-//		for(int i = 0; i < w.length; i++) {
-//			for(int j = 0; j < w[0].length; j++) {
-//				w[i][j] = w[i][j] + lr * (inp[i]-inp[j]) * out[i];
-//				System.out.println(w[i][j]);
-//			}
-//		}
 	}
 
 	void trainOrTestNet(boolean train, int maxCount, MNISTReader frame){
@@ -306,13 +271,7 @@ public class MNISTReader extends JFrame {
 //			drawActivity(600,0,reconstructed_input,red,green,blue);
 			if (train){
 				contrastiveDivergence(input,output,reconstructed_input,weights);
-			}	
-			
-//		    for(int i = 0; i < input.length-10; i++) {
-//		    	
-//		    	System.out.println("### input: " + input[i]  + " ###recon: " + reconstructed_input[i]);
-//		    }
-		    
+			}
 
 			if (count%111==0){
 				//System.out.println("#count: " + count);
@@ -353,11 +312,6 @@ public class MNISTReader extends JFrame {
 
 			pattern++;
 		}
-
-
-
-
-	    
 	}
 
 
