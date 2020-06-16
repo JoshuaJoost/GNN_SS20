@@ -83,14 +83,13 @@ class neuronalNetwork:
         for layer in range(self.neuronalNetworkStructure.size):
             # set values of input layer
             if self.neuronalNetworkStructure[layer].getIsInputLayer():
-                # target value is not considered
-
                 if input.shape[0] == 2:
                     # input: shape [x, y]
                     self.neuronalNetworkStructure[layer].setLayerInputs(input[:])
                     pass
                 elif input.shape[0] == 3:
                     # input: shape [x, y, targetValue]
+                    # target value is not considered
                     self.neuronalNetworkStructure[layer].setLayerInputs(input[:-1])
                     pass
                 else:
