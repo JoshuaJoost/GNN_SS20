@@ -2,10 +2,8 @@ __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (
 # maintainer = who fixes buggs?
 __maintainer = __authors__
 __date__ = "2020-05-01"
-__version__ = "0.5"
-__status__ = "Test" 
-##--- TODO
-#- testen
+__version__ = "1.0"
+__status__ = "Ready"
 
 # kernel imports
 import numpy as np
@@ -76,13 +74,6 @@ class neuron:
         pass
 
     pass
-
-
-
-#inputLayerX = 2
-#inputLayerY = 3
-#n1 = neuron(layerName="InputLayer", layerNeuronNumber=1, isInputNeuron=False, isBiasNeuron=True, input=inputLayerX)
-#print(n1.__str__())
 
 
 

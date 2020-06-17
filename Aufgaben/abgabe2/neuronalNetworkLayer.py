@@ -2,11 +2,8 @@ __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (
 # maintainer = who fixes buggs?
 __maintainer = __authors__
 __date__ = "2020-05-01"
-__version__ = "0.0"
-__status__ = "Development" 
-##--- TODO
-# - testen
-# - [optional]: setzen spezifischer Gewichte 
+__version__ = "1.0"
+__status__ = "Ready" 
 
 # kernel imports
 import numpy as np
@@ -231,22 +228,6 @@ class neuronalNetworkLayer():
         pass
 
     pass 
-
-#h1 = neuronalNetworkLayer(1, 4, "HiddenLayer1")
-#print(h1.getLayerDeltavalueMatrix())
-
-#h2 = neuronalNetworkLayer(1, 4, "HiddenLayer2")
-
-#h1.connectTo(h2)
-#h1.setRandomWeights()
-
-#print("n+bias: " + str(h1.getLayerNeuronsAndBiasOutputValues()))
-#print("n: " + str(h1.getLayerNeuronsOutputValues()))
-
-#newWeights = np.ones((5,4))
-#print(h1.getLayerWeights())
-#h1.setWeights(useSpecificWeights=True, specificWeightsArray=newWeights)
-#print(h1.getLayerWeights())
 
 
 
