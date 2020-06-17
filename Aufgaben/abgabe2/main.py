@@ -20,7 +20,7 @@ from matplotlib import pyplot as plt
 import ownFunctions
 import constants
 from constants import numberOfValidTrainData, numberOfInvalidTrainData
-from view import printCircle, printSummary
+import view 
 import neuronalNetwork as nn
 
 
@@ -74,7 +74,8 @@ print(str(int(okValue * testData.shape[0] / 100)) + '% richtig')
 plotData_Error = nen.preparePlotData_Error(dataDivisor=1000)
 
 # print evaluation
-
+view.printCircle(value_range=2, query=nen.forwarding)
+view.printErrorPerformance(plotData_Error)
 
 #tquery = lambda x,y: nen.forwarding(np.array([x,y])) 
 
