@@ -28,7 +28,6 @@ import javax.swing.JFrame;
 //TODO implement: computeConvolution
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-
 	public static final int	imageWidth		= 900;
 	public static final int	imageHeight		= 600;
 	public InputOutput		inputOutput		= new InputOutput(this);
@@ -106,6 +105,17 @@ public class MainFrame extends JFrame {
 
 	 // --- activate first convolutional layer with ReLu output
 	 /* Code für Abgabe 4 */
+	 // x > 0 ? x : 0;
+	 for(int pixel = 0; pixel < out[0].length; pixel++) {
+		 
+		 sum = 0;
+		 for(int neuron = 0; neuron < NEURONS; neuron++) {
+			 sum += out[0][neuron] * convWeight[neuron][pixel];
+		 }
+		 
+		 out[1][pixel] = sum>0?sum:0;
+	 }
+	 
 	 
 	 /* Ende Code für Abgabe 4 */
 	}
