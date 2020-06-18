@@ -1,0 +1,2 @@
+module abgabe4 {
+}
