@@ -10,6 +10,11 @@
 *                                                                       *
 * @file : MainFrame.java                                                *
 *************************************************************************/
+/*
+ * Lösung der Aufgabe durch:
+ * @autor Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (1626034)
+ * @date 2020-06-18
+ */
 package abgabe4;
 
 import java.awt.Color;
@@ -20,6 +25,7 @@ import java.awt.image.ImageObserver;
 
 import javax.swing.JFrame;
 
+//TODO implement: computeConvolution
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
@@ -99,13 +105,9 @@ public class MainFrame extends JFrame {
 	 out[0][8] = getPixel(x+1,y+1);
 
 	 // --- activate first convolutional layer with ReLu output
-	
-		// ---------------------------------------------------------------------
-		// ---------------------------------------------------------------------
-		// ----------------------- INSERT CODE HERE ----------------------------
-		// ---------------------------------------------------------------------
-		// ---------------------------------------------------------------------
+	 /* Code für Abgabe 4 */
 	 
+	 /* Ende Code für Abgabe 4 */
 	}
 	// --- adaptWeights() ----------------------------------------
 	void adaptWeights(int x, int y)
