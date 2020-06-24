@@ -8,40 +8,49 @@ __status__ = "Development"
 # kernel import
 import numpy as np
 import math
+from matplotlib import pyplot as plt
 
 # constants
 ## functions
-tanh_func = lambda netInput: (2 / (1 + math.e ** -2.0 * float(netInput)) -1)
+tanh_func = lambda netInput: (2 / (1 + math.e ** (-2.0 * float(netInput))) -1)
 
 ## net constants
-numBias = 2
+numBias = 1
 numNeurons = 2
 
 ## weightMatrix
-# [WeightsBias2, WeightsBias1, W11, W12, W21, W22]
-weightMatrix = np.array([[-3.37, 0.125, -4, 1.5, -1.5, 0]])
+# [[W11, W21],[W12, W22]]
+weightMatrix = np.array([[-4, -1.5], [1.5, 0]])
+# [WBias1, WBias2]
+weightMatrixBias = np.array([-3.37, 0.125])
 
-# startingValues [startingValueNeron1, starzingValueNeuron2, Bias1Value, Bias2Value]
-startingValues = np.array([[0.0, 0.0, 1, 1]])
+# [Neuron1, Neuron2]
+neuronValues = np.array([0.0,0.0])
 
 # Implements reccurent Hopfield-Net
 # main
+iterations = 10
 
-matrix = np.dot(weightMatrix.T, startingValues)
+plotValuesN1 = np.zeros([iterations + 1])
+plotValuesN1[0] = neuronValues[0]
 
-b1Netinput = np.sum(matrix[0]) + np.sum(matrix[1]) + np.sum(matrix[4])
-b2Netinput = np.sum(matrix[0]) + np.sum(matrix[3]) + np.sum(matrix[5])
-n1NetInput = np.sum(matrix[2]) + np.sum(matrix[3]) + np.sum(matrix[5])
-n2NetInput = np.sum(matrix[2]) + np.sum(matrix[4]) + np.sum(matrix[5])
+plotValuesN2 = np.zeros([iterations + 1])
+plotValuesN2[0] = neuronValues[1]
 
-b1Activate = tanh_func(b1Netinput)
-b2Activate = tanh_func(b2Netinput)
-n1Activate = tanh_func(n1NetInput)
-n2Activate = tanh_func(n2NetInput)
+for i in range(iterations):
+    # synchron activation
+    synchNeuron1Value = neuronValues[0] * weightMatrix[0][0] + neuronValues[1] * weightMatrix[1][0] + weightMatrixBias[0]
+    synchNeuron2Value = neuronValues[0] * weightMatrix[0][1] + neuronValues[1] * weightMatrix[1][1] + weightMatrixBias[1]
+    
+    neuronValues[0] = tanh_func(synchNeuron1Value)
+    neuronValues[1] = tanh_func(synchNeuron2Value)
 
-print("Werden alle Neuronen synchron aktiviert erhält man die 4 Werte: [" + str(b1Activate) + "][" + str(b2Activate) + "][" + str(n1Activate) + "][" + str(n2Activate) + "]")
+    plotValuesN1[i+1] = neuronValues[0]
+    plotValuesN2[i+1] = neuronValues[1]   
+    pass
 
-
-
+plt.plot(plotValuesN1, 's-', markersize=6, color='red')
+plt.plot(plotValuesN2, 's-', markersize=6, color='blue')
+plt.show()
 
 
