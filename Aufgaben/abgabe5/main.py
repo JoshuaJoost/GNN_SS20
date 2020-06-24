@@ -1,9 +1,9 @@
 __authors__ = "Rosario Allegro (1813064), Sedat Cakici (1713179), Joshua Joost (1626034)"
 # maintainer = who fixes buggs?
 __maintainer = __authors__
-__date__ = "2020-04-23"
-__version__ = "0.0"
-__status__ = "Development"
+__date__ = "2020-06-24"
+__version__ = "1.0"
+__status__ = "Ready"
 
 # kernel import
 import numpy as np
